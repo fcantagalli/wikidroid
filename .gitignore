@@ -13,9 +13,9 @@ bin/
 gen/
 
 # Package Files #
-*.jar
-*.war
-*.ear
+#*.jar
+#*.war
+#*.ear
 
 # Project Files #
 .project

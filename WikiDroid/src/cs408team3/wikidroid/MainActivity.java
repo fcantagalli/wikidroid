@@ -1,4 +1,4 @@
-package com.example.wikidroid;
+package cs408team3.wikidroid;
 
 import android.app.Activity;
 import android.content.res.Configuration;

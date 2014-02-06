@@ -18,14 +18,14 @@ gen/
 #*.ear
 
 # Project Files #
-.project
+#.project
 .gitignore.txt
 
 # Macintosh file system files #
 .DS_Store
 
 # Eclipse files #
-.classpath
+#.classpath
 .settings
 .metadata
 .metadata/

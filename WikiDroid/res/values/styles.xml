@@ -2,6 +2,11 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/Widiget.ActionBar.WikiDroid</item>
+    </style>
+    
+    <style name="Widiget.ActionBar.WikiDroid" parent="android:Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:displayOptions">showHome|useLogo|homeAsUp</item>
     </style>
 
 </resources>

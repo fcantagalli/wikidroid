@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package wikisearch;
+package cs408team3.wikisearch;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -72,7 +72,7 @@ public class HttpClientExample {
 
         // if none item are found, return null
         if (items.size() > 0) {
-            linksFounded = new ArrayList<>(items.size());
+            linksFounded = new ArrayList<QueryContentHolder>(items.size());
         } else {
             return null;
         }

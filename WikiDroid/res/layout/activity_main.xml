@@ -9,7 +9,25 @@
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+        <!-- TODO: remove -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Click Me!"
+            android:gravity="right" />
+    </FrameLayout>
+
+    <!-- The blur image -->
+
+    <ImageView
+        android:id="@+id/blur_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
     <!-- The navigation drawer -->
 
     <ListView

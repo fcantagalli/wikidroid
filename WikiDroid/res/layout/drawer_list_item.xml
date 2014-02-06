@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/drawer_list_item_bg"
     android:gravity="center_vertical"
     android:paddingBottom="@dimen/drawer_list_item_padding_top_bottom"
     android:paddingLeft="@dimen/drawer_list_item_padding_left_right"

@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, mListTitles));
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, R.id.drawer_list_item_text, mListTitles));
         // Set the list's click listener
         // mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         

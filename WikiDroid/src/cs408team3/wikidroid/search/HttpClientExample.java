@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cs408team3.wikisearch;
+package cs408team3.wikidroid.search;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

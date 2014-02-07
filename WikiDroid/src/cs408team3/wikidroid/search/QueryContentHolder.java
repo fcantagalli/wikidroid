@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package cs408team3.wikisearch;
+package cs408team3.wikidroid.search;
 
 /**
  *

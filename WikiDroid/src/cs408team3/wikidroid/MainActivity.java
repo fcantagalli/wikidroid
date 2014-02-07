@@ -1,5 +1,7 @@
 package cs408team3.wikidroid;
 
+import java.util.Random;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,7 +25,12 @@ public class MainActivity extends Activity {
 
 	// TODO: remove
 	private final String[] mListTitles = new String[] { "Hello", "Yay" };
+	private final String[] mButtonTitles = new String[] {"LOL", "Click me again!", "LOLOL", "jajaja"};
+	private final int[] mButtonColors = new int[] {Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GRAY, Color.GREEN};
 
+	// TODO: remove
+	private Button mTestButton;
+	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ImageView mBlurImage;
@@ -37,6 +45,22 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// TODO: remove
+		mTestButton = (Button) findViewById(R.id.test_button);
+		mTestButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Random r = new Random();
+				String title = mButtonTitles[r.nextInt(mButtonTitles.length)];
+				int color = mButtonColors[r.nextInt(mButtonColors.length)];
+				
+				mTestButton.setText(title);
+				mTestButton.setBackgroundColor(color);
+			}
+
+		});
 
 		// mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

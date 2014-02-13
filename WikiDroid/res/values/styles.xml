@@ -27,7 +27,8 @@
         <item name="android:actionDropDownStyle">@style/DropDownNav.Wikidroid</item>
         <item name="android:actionBarStyle">@style/ActionBar.Solid.Wikidroid</item>
         <item name="android:actionModeBackground">@drawable/cab_background_top_wikidroid</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_wikidroid</item> 
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_wikidroid</item>
+        <item name="android:icon">@drawable/ic_logo</item> 
     </style>
     
     <style name="ActionBar.Solid.Wikidroid" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">

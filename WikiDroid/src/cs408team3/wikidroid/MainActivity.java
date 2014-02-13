@@ -35,6 +35,8 @@ import cs408team3.wikidroid.search.QueryContentHolder;
 
 public class MainActivity extends Activity {
 
+	private static final String TAG = "MainActivity";
+
 	// TODO: remove
 	private List<String> mListTitles = new ArrayList<String>();
 	
@@ -219,7 +221,7 @@ public class MainActivity extends Activity {
 	        return true;
 	    }
 	
-	private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle {
+	private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
 
 		private Bitmap scaled;
 		private BlurTask blurTask;
@@ -271,11 +273,18 @@ public class MainActivity extends Activity {
 			blurTask = new BlurTask(mContentFrame.getContext(), null, scaled);
 
 			mBlurImage.setImageBitmap(scaled);
+			Log.v(TAG, "BlurImage set");
 		}
 
 		private void clearBlurImage() {
 			mBlurImage.setVisibility(View.GONE);
 			mBlurImage.setImageBitmap(null);
+			blurTask = null;
+		}
+
+		@Override
+		public void onBlurOperationFinished() {
+			mBlurImage.invalidate();
 		}
 
 	}

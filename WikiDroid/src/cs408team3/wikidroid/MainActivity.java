@@ -1,25 +1,38 @@
 package cs408team3.wikidroid;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
+import android.widget.Toast;
 import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
 import cs408team3.wikidroid.blur.Utils;
+import cs408team3.wikidroid.search.HttpClientExample;
+import cs408team3.wikidroid.search.QueryContentHolder;
 
 public class MainActivity extends Activity {
 
@@ -35,6 +48,7 @@ public class MainActivity extends Activity {
 	private ListView mDrawerList;
 	private ImageView mBlurImage;
 	private FrameLayout mContentFrame;
+	private WebView mWebPage;
 
 	private ActionBarDrawerToggle mDrawerToggle;
 
@@ -46,8 +60,11 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		mWebPage = (WebView) findViewById(R.id.webView1);
+		mWebPage.getSettings().setBuiltInZoomControls(true);
+		
 		// TODO: remove
-		mTestButton = (Button) findViewById(R.id.test_button);
+		/*mTestButton = (Button) findViewById(R.id.test_button);
 		mTestButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -60,7 +77,7 @@ public class MainActivity extends Activity {
 				mTestButton.setBackgroundColor(color);
 			}
 
-		});
+		});*/
 
 		// mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -111,6 +128,39 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		// Associate searchable configuration with the SearchView
+	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+	    searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				// TODO Auto-generated method stub
+				//Toast.makeText(getApplicationContext(), "Teste", Toast.LENGTH_LONG).show();
+				boolean haveNet = isNetworkAvailable();
+				if(haveNet == false){
+					Toast.makeText(getApplicationContext(), "Sorry, No internet connection", Toast.LENGTH_SHORT).show();
+					return false;
+				}
+				else{
+					if(verifyString(query) == false){
+						Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT).show();
+						return false;
+					}
+					SearchArticle search = new SearchArticle(getApplicationContext());
+					search.execute(query);
+					
+					return true;
+				}
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 		return true;
 	}
 
@@ -126,6 +176,51 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Test if there is available network to search on internet
+	 * @return
+	 */
+	 private boolean isNetworkAvailable() {
+	        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	 }
+	 
+	 /**
+	     * Method to test if the string is valid or not.
+	     * Test if its null, blank " " or ""
+	     * @param term
+	     * @return 
+	     */
+	    private boolean verifyString(String term){
+	        if(term == null){
+	            System.err.println("term is null");
+	            return false;
+	        }
+	        if(term.equals("")){
+	            System.err.println("term is empty");
+	            return false;
+	        }
+	        String aux = term.replaceAll(" ", "");
+	        if(term.equals("")){
+	            System.err.println("term is just blanket spaces");
+	            return false;
+	        }
+	        if(term.equals("@")){
+	        	System.err.println("term is just @");
+	            return false;
+	        }
+	        if(term.equals("&")){
+	        	System.err.println("term is just &");
+	            return false;
+	        }
+	        if(term.equals("\"\"")){
+	        	System.err.println("term is just \"\"");
+	            return false;
+	        }
+	        return true;
+	    }
+	
 	private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle {
 
 		private Bitmap scaled;
@@ -187,4 +282,41 @@ public class MainActivity extends Activity {
 
 	}
 
+	
+	private class SearchArticle extends AsyncTask<String, Integer, String> {
+		
+		Context context;
+		HttpClientExample search;
+		
+		public SearchArticle(Context context) {
+			this.context = context;
+			search = new HttpClientExample();
+			// TODO Auto-generated constructor stub
+		}
+		
+	    protected String doInBackground(String... query) {
+	    	
+	    	String result = search.searchGoogle(query[0]);
+	        
+	    	if (result == null) return null;
+	        publishProgress(50);
+	            
+	        return result;
+	     }
+
+	     protected void onProgressUpdate(Integer... progress) {
+	         //setProgressPercent(progress[0]);
+	     }
+
+	     protected void onPostExecute(String result) {
+	    	 
+	         ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
+	         
+	         if(resultList == null) Log.e("search", "Erro when converting string to a list");
+	         else{
+	        	 mWebPage.loadUrl(resultList.get(0).getLink());
+	         }
+	         
+	     }
+	 }
 }

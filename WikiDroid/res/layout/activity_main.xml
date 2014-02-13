@@ -8,23 +8,12 @@
 
     <FrameLayout
         android:id="@+id/content_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <!-- TODO: remove -->
-        <!-- 
-        <Button
-            android:id="@+id/test_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Click Me!"
-            android:gravity="right" />
-         -->
+        android:layout_width="match_parent" >
 
         <WebView
             android:id="@+id/webView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-         
     </FrameLayout>
 
     <!-- The blur image -->

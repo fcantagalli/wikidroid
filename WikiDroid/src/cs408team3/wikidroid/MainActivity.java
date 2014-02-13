@@ -38,11 +38,6 @@ public class MainActivity extends Activity {
 
 	// TODO: remove
 	private final String[] mListTitles = new String[] { "Hello", "Yay" };
-	private final String[] mButtonTitles = new String[] {"LOL", "Click me again!", "LOLOL", "jajaja"};
-	private final int[] mButtonColors = new int[] {Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GRAY, Color.GREEN};
-
-	// TODO: remove
-	private Button mTestButton;
 	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -62,22 +57,6 @@ public class MainActivity extends Activity {
 		
 		mWebPage = (WebView) findViewById(R.id.webView1);
 		mWebPage.getSettings().setBuiltInZoomControls(true);
-		
-		// TODO: remove
-		/*mTestButton = (Button) findViewById(R.id.test_button);
-		mTestButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Random r = new Random();
-				String title = mButtonTitles[r.nextInt(mButtonTitles.length)];
-				int color = mButtonColors[r.nextInt(mButtonColors.length)];
-				
-				mTestButton.setText(title);
-				mTestButton.setBackgroundColor(color);
-			}
-
-		});*/
 
 		// mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

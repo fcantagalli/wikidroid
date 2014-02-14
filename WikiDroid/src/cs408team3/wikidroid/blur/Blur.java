@@ -16,7 +16,7 @@ import android.renderscript.ScriptIntrinsicBlur;
 // https://github.com/PomepuyN/BlurEffectForAndroidDesign
 public class Blur {
 
-	public static final int DEFAULT_BLUR_RADIUS = 7;
+	public static final int DEFAULT_BLUR_RADIUS = 4;
 	public static final int DEFAULT_DOWNSAMPLING = 5;
 
 	public static Bitmap apply(Context context, Bitmap sentBitmap) {

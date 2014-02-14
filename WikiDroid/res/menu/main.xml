@@ -13,6 +13,9 @@
         android:title="@string/action_add_tab"
         android:visible="false"/>
     <item
+        android:id="@+id/languages"
+        android:title="Languages"/>
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"

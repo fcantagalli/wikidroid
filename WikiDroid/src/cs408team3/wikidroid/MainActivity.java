@@ -16,10 +16,12 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -62,7 +64,9 @@ public class MainActivity extends Activity {
 		
 		mWebPage = (WebView) findViewById(R.id.webView1);
 		mWebPage.getSettings().setBuiltInZoomControls(true);
-		
+		//mWebPage.setWebViewClient(new MyWebViewClient(getApplicationContext()));
+		mWebPage.setWebViewClient(new WebViewClient());
+
 		// TODO: remove
 		/*mTestButton = (Button) findViewById(R.id.test_button);
 		mTestButton.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +105,18 @@ public class MainActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    // Check if the key event was the Back button and if there's history
+	    if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebPage.canGoBack()) {
+	        mWebPage.goBack();
+	        return true;
+	    }
+	    // If it wasn't the Back key or there's no web page history, bubble up to the default
+	    // system behavior (probably exit the activity)
+	    return super.onKeyDown(keyCode, event);
+	}
+	
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);

@@ -14,7 +14,6 @@ public class MyWebView extends WebView {
 	public MyWebView(Context context) {
 		super(context);
 		this.context = context;
-		this.setWebViewClient(new MyWebViewClient());
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -30,23 +29,30 @@ public class MyWebView extends WebView {
 	    return super.onKeyDown(keyCode, event);
 	}
 
+}
 
-	class MyWebViewClient extends WebViewClient {
+class MyWebViewClient extends WebViewClient {
 
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			// TODO Auto-generated method stub
-			if (Uri.parse(url).getHost().equals("www.??.wikipedia.com/*")) {
-				// This is my web site, so do not override; let my WebView load
-				// the page
-				return false;
-			}
-			// Otherwise, the link is not for a page on my site, so launch
-			// another Activity that handles URLs
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-			context.startActivity(intent);
-			return true;
-		}
+	private Context context;
 
+	public MyWebViewClient(Context context) {
+		// TODO Auto-generated constructor stub
+		this.context = context;
 	}
+	
+	@Override
+	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		// TODO Auto-generated method stub
+		if (Uri.parse(url).getHost().equals("www.??.wikipedia.com/*")) {
+			// This is my web site, so do not override; let my WebView load
+			// the page
+			return false;
+		}
+		// Otherwise, the link is not for a page on my site, so launch
+		// another Activity that handles URLs
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		context.startActivity(intent);
+		return true;
+	}
+
 }

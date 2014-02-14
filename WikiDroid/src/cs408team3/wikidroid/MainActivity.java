@@ -1,7 +1,7 @@
 package cs408team3.wikidroid;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -23,7 +23,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,15 +37,15 @@ import cs408team3.wikidroid.search.QueryContentHolder;
 
 public class MainActivity extends Activity {
 
-	// TODO: remove
-	private final String[] mListTitles = new String[] { "Hello", "Yay" };
-	private final String[] mButtonTitles = new String[] {"LOL", "Click me again!", "LOLOL", "jajaja"};
-	private final int[] mButtonColors = new int[] {Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GRAY, Color.GREEN};
+	private static final String TAG = "MainActivity";
 
 	// TODO: remove
-	private Button mTestButton;
+	private List<String> mListTitles = new ArrayList<String>();
 	
 	private DrawerLayout mDrawerLayout;
+	
+	// TODO: replace
+	private ArrayAdapter<String> mDrawerListAdapter;
 	private ListView mDrawerList;
 	private ImageView mBlurImage;
 	private FrameLayout mContentFrame;
@@ -64,6 +63,7 @@ public class MainActivity extends Activity {
 		
 		mWebPage = (WebView) findViewById(R.id.webView1);
 		mWebPage.getSettings().setBuiltInZoomControls(true);
+
 		//mWebPage.setWebViewClient(new MyWebViewClient(getApplicationContext()));
 		mWebPage.setWebViewClient(new WebViewClient());
 
@@ -93,8 +93,12 @@ public class MainActivity extends Activity {
 
 		// Set the drawer toggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		// TODO: replace
 		// Set the adapter for the list view
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, R.id.drawer_list_item_text, mListTitles));
+		mDrawerListAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, R.id.drawer_list_item_text, mListTitles);
+		mDrawerList.setAdapter(mDrawerListAdapter);
+
 		// Set the list's click listener
 		// mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -133,10 +137,15 @@ public class MainActivity extends Activity {
 	// Called whenever we call invalidateOptionsMenu()
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, hide action items related to the content
-		// view
+		// If the nav drawer is open, show / hide action items related to the
+		// content view
 		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+		
+		// Show Add tab
+		menu.findItem(R.id.action_add_tab).setVisible(drawerOpen);
+		// Hide search
+		menu.findItem(R.id.search).setVisible(!drawerOpen);
+		
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -188,8 +197,16 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		// Handle your other action bar items...
-
-		return super.onOptionsItemSelected(item);
+		switch(item.getItemId()) {
+		case R.id.action_add_tab:
+			// TODO: remove
+			mListTitles.add("New Tab");
+			mDrawerListAdapter.notifyDataSetChanged();
+			
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	/**
@@ -237,7 +254,7 @@ public class MainActivity extends Activity {
 	        return true;
 	    }
 	
-	private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle {
+	private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
 
 		private Bitmap scaled;
 		private BlurTask blurTask;
@@ -289,11 +306,18 @@ public class MainActivity extends Activity {
 			blurTask = new BlurTask(mContentFrame.getContext(), null, scaled);
 
 			mBlurImage.setImageBitmap(scaled);
+			Log.v(TAG, "BlurImage set");
 		}
 
 		private void clearBlurImage() {
 			mBlurImage.setVisibility(View.GONE);
 			mBlurImage.setImageBitmap(null);
+			blurTask = null;
+		}
+
+		@Override
+		public void onBlurOperationFinished() {
+			mBlurImage.invalidate();
 		}
 
 	}

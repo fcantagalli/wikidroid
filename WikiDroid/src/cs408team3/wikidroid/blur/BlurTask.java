@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class BlurTask {
+
 	protected static final String TAG = "BlurTask";
 	private Bitmap source;
 	private Canvas canvas;
@@ -65,7 +66,7 @@ public class BlurTask {
 		long start = System.nanoTime();
 		blurred = Blur.apply(context, source, radius);
 		long delta = System.nanoTime() - start;
-		Log.v("BlurTask", "Blurring took " + delta / 1e6f + " ms");
+		Log.v(TAG, "Blurring took " + delta / 1e6f + " ms");
 	}
 
 	public void cancel() {

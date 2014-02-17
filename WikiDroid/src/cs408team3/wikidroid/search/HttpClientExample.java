@@ -6,6 +6,7 @@
 package cs408team3.wikidroid.search;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.logging.Logger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -99,17 +101,34 @@ public class HttpClientExample {
                 + "key=" + API_KEY + "&cx=" + SEARCH_ENGINE_ID + "&q=" + content + "&cref=*.wikipedia.org/*"
                 + "&fields=" + QUERY_FIELDS;
         Log.i("search","Custom request: \n" + query);
-        try {
-            result = sendGet(query);
-        } catch (Exception ex) {
-            Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+        for (int i = 0; i < 2; i++){
+	        try {
+	            result = sendGet(query);
+	            return result;
+	        } 
+	        catch(IllegalArgumentException ex){
+	        	Log.i("HTTPGET",ex.getMessage());
+	            Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+	            result = "wrong url";
+	            return result;
+	        }
+	        catch (ClientProtocolException ex) {
+	        	Log.i("HTTPGET", ex.getMessage());
+	            Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+	        }
+	        catch(IOException ex){
+	        	Log.i("HTTPGET",ex.getMessage());
+	            Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+	            result = "IOException";
+	            return result;
+	        }
+	        
         }
-
-        return result;
+        return null;
     }
     
     // HTTP GET request
-    private String sendGet(String URL) throws Exception {
+    private String sendGet(String URL) throws IllegalArgumentException, IOException, ClientProtocolException  {
 
         //CloseableHttpClient client = HttpClients.createDefault();
     	HttpClient client = new DefaultHttpClient();

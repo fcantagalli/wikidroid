@@ -173,6 +173,9 @@ public class MainActivity extends Activity {
 						Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT).show();
 						return false;
 					}
+					if(verifyString(query) == false) 
+						return false;
+					
 					SearchArticle search = new SearchArticle(getApplicationContext());
 					search.execute(query);
 					
@@ -225,7 +228,7 @@ public class MainActivity extends Activity {
 	     * @param term
 	     * @return 
 	     */
-	    private boolean verifyString(String term){
+	 private boolean verifyString(String term){
 	        if(term == null){
 	            System.err.println("term is null");
 	            return false;
@@ -337,8 +340,7 @@ public class MainActivity extends Activity {
 	    protected String doInBackground(String... query) {
 	    	
 	    	String result = search.searchGoogle(query[0]);
-	        
-	    	if (result == null) return null;
+	 
 	        publishProgress(50);
 	            
 	        return result;
@@ -349,6 +351,18 @@ public class MainActivity extends Activity {
 	     }
 
 	     protected void onPostExecute(String result) {
+	    	 if(result == null) {
+	    		 Toast.makeText(context, "Sorry, it was not possible to establish connection with the server. Try again later", Toast.LENGTH_SHORT).show();
+	    		 return;
+	    	 }
+	    	 else if(result.equals("wrong url")) {
+	    		 Toast.makeText(context, "Sorry, wrong search, please contact the developers", Toast.LENGTH_SHORT).show();
+	    		 return;
+	    	 }
+	    	 else if(result.equals("IOException")) {
+	    		 Toast.makeText(context, "Connection lost, please try again after establishing connection", Toast.LENGTH_SHORT).show();
+	    		 return;
+	    	 }
 	    	 
 	         ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
 	         

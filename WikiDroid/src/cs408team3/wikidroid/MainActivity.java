@@ -20,12 +20,14 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
@@ -53,6 +55,7 @@ public class MainActivity extends Activity {
 	private FrameLayout mContentFrame;
 	private WebView mWebPage;
 	private MenuItem mSearchMenuItem;
+	private ProgressBar mWebProgressBar;
 
 	private ActionBarDrawerToggle mDrawerToggle;
 
@@ -64,14 +67,9 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		mWebPage = (WebView) findViewById(R.id.webView1);
-		mWebPage.getSettings().setBuiltInZoomControls(true);
-		mWebPage.getSettings().setDisplayZoomControls(false);
-
-		//mWebPage.setWebViewClient(new MyWebViewClient(getApplicationContext()));
-		mWebPage.setWebViewClient(new WikiDroidWebViewClient());
-
 		mTitle = mDrawerTitle = getTitle();
+		mWebPage = (WebView) findViewById(R.id.content_view);
+		mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mBlurImage = (ImageView) findViewById(R.id.blur_image);
@@ -81,6 +79,37 @@ public class MainActivity extends Activity {
 
 		// Set the drawer toggle as the DrawerListener
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		
+		// Setup mWebPage
+		mWebPage.getSettings().setBuiltInZoomControls(true);
+		mWebPage.getSettings().setDisplayZoomControls(false);
+		mWebPage.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				Log.i(TAG, "Page " + url + " loaded");
+				
+				setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
+				
+				// Make sure ProgressBar is gone
+				stopWebProgressBar();
+			}
+		});
+		mWebPage.setWebChromeClient(new WebChromeClient() {
+			@Override
+			public void onProgressChanged(WebView view, int progress) {
+				Log.v(TAG, "Page load progress " + progress);
+				
+				// Make sure ProgressBar is visible
+				if (progress < 100) {
+					startWebProgressBar();
+				}
+				
+				// Make sure ProgressBar is gone
+				if (progress == 100) {
+					stopWebProgressBar();
+				}
+			}
+		});
 
 		// TODO: replace
 		// Set the adapter for the list view
@@ -368,17 +397,6 @@ public class MainActivity extends Activity {
 	     }
 	}
 	
-	private class WikiDroidWebViewClient extends WebViewClient {
-
-		@Override
-		public void onPageFinished(WebView view, String url) {
-			Log.i(TAG, "Page " + url + " loaded");
-			
-			setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
-		}
-
-	}
-	
 	private void setTitle(String title, int status) {
 		switch(status) {
 		case ACTIONBAR_NORMAL_TITLE:
@@ -396,5 +414,17 @@ public class MainActivity extends Activity {
 	
 	private void toggleTitle(int status) {
 		setTitle(null, status);
+	}
+	
+	private void startWebProgressBar() {
+		if (mWebProgressBar.getVisibility() != View.VISIBLE) {
+			mWebProgressBar.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private void stopWebProgressBar() {
+		if (mWebProgressBar.getVisibility() != View.GONE) {
+			mWebProgressBar.setVisibility(View.GONE);
+		}
 	}
 }

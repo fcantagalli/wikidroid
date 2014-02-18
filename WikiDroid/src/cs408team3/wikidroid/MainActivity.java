@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -212,13 +210,13 @@ public class MainActivity extends Activity {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				//Toast.makeText(getApplicationContext(), "Teste", Toast.LENGTH_LONG).show();
-				boolean haveNet = isNetworkAvailable();
+				boolean haveNet = Utils.isNetworkAvailable(getApplicationContext());
 				if(haveNet == false){
 					Toast.makeText(getApplicationContext(), R.string.error_no_internet, Toast.LENGTH_SHORT).show();
 					return false;
 				}
 				else{
-					if(!verifyString(query)){
+					if(!Utils.verifySearchString(query, TAG)){
 						Toast.makeText(getApplicationContext(), R.string.error_invalid_input, Toast.LENGTH_SHORT).show();
 						return false;
 					}
@@ -266,51 +264,6 @@ public class MainActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	/**
-	 * Test if there is available network to search on internet
-	 * @return
-	 */
-	 private boolean isNetworkAvailable() {
-	        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-	        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-	        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	 }
-	 
-	 /**
-	     * Method to test if the string is valid or not.
-	     * Test if its null, blank " " or ""
-	     * @param term
-	     * @return 
-	     */
-	 private boolean verifyString(String term){
-	        if(term == null){
-	            Log.w(TAG, "term is null");
-	            return false;
-	        }
-	        if(term.equals("")){
-	        	Log.w(TAG, "term is empty");
-	            return false;
-	        }
-	        String aux = term.replaceAll(" ", "");
-	        if(term.equals("")){
-	        	Log.w(TAG, "term is just blanket spaces");
-	            return false;
-	        }
-	        if(term.equals("@")){
-	        	Log.w(TAG, "term is just @");
-	            return false;
-	        }
-	        if(term.equals("&")){
-	        	Log.w(TAG, "term is just &");
-	            return false;
-	        }
-	        if(term.equals("\"\"")){
-	        	Log.w(TAG, "term is just \"\"");
-	            return false;
-	        }
-	        return true;
-	    }
 	
 	private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
 

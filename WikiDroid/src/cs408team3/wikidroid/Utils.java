@@ -3,8 +3,12 @@
 
 package cs408team3.wikidroid;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 import android.view.View;
 
 public class Utils {
@@ -43,6 +47,53 @@ public class Utils {
     	String nTitle = new String(title.split(" - ")[0]);
     	
     	return nTitle;
+    }
+    
+	/**
+	 * Test if there is available network to search on internet
+	 * @return
+	 */
+	public static boolean isNetworkAvailable(Context context) {
+		 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		 NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		 
+		 return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+	
+	/**
+	 * Method to test if the search term String is valid or not.
+	 * Test if its null, blank " " or "".
+	 * @param term Search term String.
+	 * @param TAG Activity tag for debugging purpose.
+	 * @return 
+	 */
+	public static boolean verifySearchString(String term, String TAG){
+        if(term == null){
+            Log.w(TAG, "term is null");
+            return false;
+        }
+        if(term.equals("")){
+        	Log.w(TAG, "term is empty");
+            return false;
+        }
+        //String aux = term.replaceAll(" ", "");
+        if(term.equals("")){
+        	Log.w(TAG, "term is just blanket spaces");
+            return false;
+        }
+        if(term.equals("@")){
+        	Log.w(TAG, "term is just @");
+            return false;
+        }
+        if(term.equals("&")){
+        	Log.w(TAG, "term is just &");
+            return false;
+        }
+        if(term.equals("\"\"")){
+        	Log.w(TAG, "term is just \"\"");
+            return false;
+        }
+        return true;
     }
 
 }

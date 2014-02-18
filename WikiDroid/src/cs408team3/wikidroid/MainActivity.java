@@ -199,7 +199,8 @@ public class MainActivity extends Activity {
 			
 			return true;
 		case R.id.languages:
-			// TODO: implement actual module functionality
+			// TODO: ADD LANGUAGE CODE HERE
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

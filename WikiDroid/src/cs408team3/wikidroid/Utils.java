@@ -1,7 +1,7 @@
 // Code borrowed from
 // https://github.com/ManuelPeinado/GlassActionBar
 
-package cs408team3.wikidroid.blur;
+package cs408team3.wikidroid;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

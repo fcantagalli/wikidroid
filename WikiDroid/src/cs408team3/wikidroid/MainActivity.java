@@ -31,7 +31,6 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
-import cs408team3.wikidroid.blur.Utils;
 import cs408team3.wikidroid.search.HttpClientExample;
 import cs408team3.wikidroid.search.QueryContentHolder;
 
@@ -366,7 +365,7 @@ public class MainActivity extends Activity {
 	private class WikiDroidWebViewClient extends WebViewClient {
 
 		@Override
-		public void onPageFinished (WebView view, String url) {
+		public void onPageFinished(WebView view, String url) {
 			Log.i(TAG, "Page " + url + " loaded");
 			
 			if (mSearchMenuItem != null) {

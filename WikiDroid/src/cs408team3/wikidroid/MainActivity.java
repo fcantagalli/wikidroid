@@ -33,14 +33,13 @@ import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
 import cs408team3.wikidroid.search.HttpClientExample;
 import cs408team3.wikidroid.search.QueryContentHolder;
-import cs408team3.wikidroid.Utils;
 
 public class MainActivity extends Activity {
 
 	private static final String TAG = "MainActivity";
 	
-	private static final int NORMAL_TITLE = 0x1;
-	private static final int DRAWER_TITLE = 0x2;
+	private static final int ACTIONBAR_NORMAL_TITLE = 0x1;
+	private static final int ACTIONBAR_DRAWER_TITLE = 0x2;
 
 	// TODO: remove
 	private List<String> mListTitles = new ArrayList<String>();
@@ -273,7 +272,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onDrawerClosed(View view) {
 			super.onDrawerClosed(view);
-			toggleTitle(NORMAL_TITLE);
+			toggleTitle(ACTIONBAR_NORMAL_TITLE);
 			clearBlurImage(); // Clear background blur
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
@@ -282,7 +281,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onDrawerOpened(View drawerView) {
 			super.onDrawerOpened(drawerView);
-			toggleTitle(DRAWER_TITLE);
+			toggleTitle(ACTIONBAR_DRAWER_TITLE);
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 
@@ -376,19 +375,19 @@ public class MainActivity extends Activity {
 				mSearchMenuItem.collapseActionView();
 			}
 			
-			setTitle(Utils.trimWikipediaTitle(view.getTitle()), NORMAL_TITLE);
+			setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
 		}
 
 	}
 	
 	private void setTitle(String title, int status) {
 		switch(status) {
-		case NORMAL_TITLE:
+		case ACTIONBAR_NORMAL_TITLE:
 			if (title != null)
 				mTitle = title;
 			getActionBar().setTitle(mTitle);
 			return;
-		case DRAWER_TITLE:
+		case ACTIONBAR_DRAWER_TITLE:
 			if (title != null)
 				mDrawerTitle = title;
 			getActionBar().setTitle(mDrawerTitle);

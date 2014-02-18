@@ -220,28 +220,28 @@ public class MainActivity extends Activity {
 	     */
 	 private boolean verifyString(String term){
 	        if(term == null){
-	            System.err.println("term is null");
+	            Log.w(TAG, "term is null");
 	            return false;
 	        }
 	        if(term.equals("")){
-	            System.err.println("term is empty");
+	        	Log.w(TAG, "term is empty");
 	            return false;
 	        }
 	        String aux = term.replaceAll(" ", "");
 	        if(term.equals("")){
-	            System.err.println("term is just blanket spaces");
+	        	Log.w(TAG, "term is just blanket spaces");
 	            return false;
 	        }
 	        if(term.equals("@")){
-	        	System.err.println("term is just @");
+	        	Log.w(TAG, "term is just @");
 	            return false;
 	        }
 	        if(term.equals("&")){
-	        	System.err.println("term is just &");
+	        	Log.w(TAG, "term is just &");
 	            return false;
 	        }
 	        if(term.equals("\"\"")){
-	        	System.err.println("term is just \"\"");
+	        	Log.w(TAG, "term is just \"\"");
 	            return false;
 	        }
 	        return true;

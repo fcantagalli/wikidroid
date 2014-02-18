@@ -33,10 +33,14 @@ import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
 import cs408team3.wikidroid.search.HttpClientExample;
 import cs408team3.wikidroid.search.QueryContentHolder;
+import cs408team3.wikidroid.Utils;
 
 public class MainActivity extends Activity {
 
 	private static final String TAG = "MainActivity";
+	
+	private static final int NORMAL_TITLE = 0x1;
+	private static final int DRAWER_TITLE = 0x2;
 
 	// TODO: remove
 	private List<String> mListTitles = new ArrayList<String>();
@@ -53,8 +57,8 @@ public class MainActivity extends Activity {
 
 	private ActionBarDrawerToggle mDrawerToggle;
 
-	// private CharSequence mDrawerTitle;
-	// private CharSequence mTitle;
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class MainActivity extends Activity {
 		//mWebPage.setWebViewClient(new MyWebViewClient(getApplicationContext()));
 		mWebPage.setWebViewClient(new WikiDroidWebViewClient());
 
-		// mTitle = mDrawerTitle = getTitle();
+		mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		mBlurImage = (ImageView) findViewById(R.id.blur_image);
@@ -269,7 +273,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onDrawerClosed(View view) {
 			super.onDrawerClosed(view);
-			// getActionBar().setTitle(mTitle);
+			toggleTitle(NORMAL_TITLE);
 			clearBlurImage(); // Clear background blur
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
@@ -278,7 +282,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onDrawerOpened(View drawerView) {
 			super.onDrawerOpened(drawerView);
-			// getActionBar().setTitle(mDrawerTitle);
+			toggleTitle(DRAWER_TITLE);
 			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 		}
 
@@ -371,7 +375,28 @@ public class MainActivity extends Activity {
 			if (mSearchMenuItem != null) {
 				mSearchMenuItem.collapseActionView();
 			}
+			
+			setTitle(Utils.trimWikipediaTitle(view.getTitle()), NORMAL_TITLE);
 		}
 
+	}
+	
+	private void setTitle(String title, int status) {
+		switch(status) {
+		case NORMAL_TITLE:
+			if (title != null)
+				mTitle = title;
+			getActionBar().setTitle(mTitle);
+			return;
+		case DRAWER_TITLE:
+			if (title != null)
+				mDrawerTitle = title;
+			getActionBar().setTitle(mDrawerTitle);
+			return;
+		}
+	}
+	
+	private void toggleTitle(int status) {
+		setTitle(null, status);
 	}
 }

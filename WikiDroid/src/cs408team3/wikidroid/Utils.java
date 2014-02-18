@@ -29,5 +29,20 @@ public class Utils {
         view.layout(0, 0, width, heightCopy);
         return dest;
     }
+    
+    /**
+     * Trim Wikipedia title.
+     * 
+     * For example, "Wikipedia - Wikipedia, the free encyclopedia" will be
+     * trimed to "Wikipedia".
+     * 
+     * @param title Original Wikipedia title.
+     * @return Trimed title.
+     */
+    public static String trimWikipediaTitle(String title) {
+    	String nTitle = new String(title.split(" - ")[0]);
+    	
+    	return nTitle;
+    }
 
 }

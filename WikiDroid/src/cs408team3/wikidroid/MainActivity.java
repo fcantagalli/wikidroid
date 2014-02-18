@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 		mWebPage.getSettings().setDisplayZoomControls(false);
 
 		//mWebPage.setWebViewClient(new MyWebViewClient(getApplicationContext()));
-		mWebPage.setWebViewClient(new WebViewClient());
+		mWebPage.setWebViewClient(new WikiDroidWebViewClient());
 
 		// mTitle = mDrawerTitle = getTitle();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -314,7 +314,6 @@ public class MainActivity extends Activity {
 		}
 
 	}
-
 	
 	private class SearchArticle extends AsyncTask<String, Integer, String> {
 		
@@ -357,14 +356,23 @@ public class MainActivity extends Activity {
 	         ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
 	         
 	         if(resultList == null) Log.e("search", "Erro when converting string to a list");
-	         else{
-	        	 if (mSearchMenuItem != null) {
-	        		 mSearchMenuItem.collapseActionView();
-	        	 }
-	        	 
+	         else{	        	 
 	        	 mWebPage.loadUrl(resultList.get(0).getLink());
 	         }
 	         
 	     }
-	 }
+	}
+	
+	private class WikiDroidWebViewClient extends WebViewClient {
+
+		@Override
+		public void onPageFinished (WebView view, String url) {
+			Log.i(TAG, "Page " + url + " loaded");
+			
+			if (mSearchMenuItem != null) {
+				mSearchMenuItem.collapseActionView();
+			}
+		}
+
+	}
 }

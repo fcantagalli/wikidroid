@@ -158,12 +158,14 @@ public class MainActivity extends Activity {
 					return false;
 				}
 				else{
-					if(verifyString(query) == false){
+					if(!verifyString(query)){
 						Toast.makeText(getApplicationContext(), R.string.error_invalid_input, Toast.LENGTH_SHORT).show();
 						return false;
 					}
-					if(verifyString(query) == false) 
-						return false;
+					
+					if (mSearchMenuItem != null) {
+						mSearchMenuItem.collapseActionView();
+					}
 					
 					SearchArticle search = new SearchArticle(getApplicationContext());
 					search.execute(query);
@@ -370,10 +372,6 @@ public class MainActivity extends Activity {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			Log.i(TAG, "Page " + url + " loaded");
-			
-			if (mSearchMenuItem != null) {
-				mSearchMenuItem.collapseActionView();
-			}
 			
 			setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
 		}

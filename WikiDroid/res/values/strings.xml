@@ -9,6 +9,12 @@
     <!-- those string are for the action bar search field -->
     <string name="search_title">Search</string>
     <string name="search_hint">Word to Search</string>
+    
+    <!-- strings of error -->
+    <string name="error_no_internet">No internet connection</string>
+    <string name="error_invalid_input">Invalid input</string>
+    <string name="error_connection">Connection error</string>
+    <string name="error_internal">Internal error</string>
 
     <!-- strings for sccessibility -->
     <string name="drawer_open">Open navigation drawer</string>

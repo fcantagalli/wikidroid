@@ -152,12 +152,12 @@ public class MainActivity extends Activity {
 				//Toast.makeText(getApplicationContext(), "Teste", Toast.LENGTH_LONG).show();
 				boolean haveNet = isNetworkAvailable();
 				if(haveNet == false){
-					Toast.makeText(getApplicationContext(), "Sorry, No internet connection", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), R.string.error_no_internet, Toast.LENGTH_SHORT).show();
 					return false;
 				}
 				else{
 					if(verifyString(query) == false){
-						Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), R.string.error_invalid_input, Toast.LENGTH_SHORT).show();
 						return false;
 					}
 					if(verifyString(query) == false) 
@@ -341,21 +341,21 @@ public class MainActivity extends Activity {
 
 	     protected void onPostExecute(String result) {
 	    	 if(result == null) {
-	    		 Toast.makeText(context, "Sorry, it was not possible to establish connection with the server. Try again later", Toast.LENGTH_SHORT).show();
+	    		 Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
 	    		 return;
 	    	 }
 	    	 else if(result.equals("wrong url")) {
-	    		 Toast.makeText(context, "Sorry, wrong search, please contact the developers", Toast.LENGTH_SHORT).show();
+	    		 Toast.makeText(context, R.string.error_internal, Toast.LENGTH_SHORT).show();
 	    		 return;
 	    	 }
 	    	 else if(result.equals("IOException")) {
-	    		 Toast.makeText(context, "Connection lost, please try again after establishing connection", Toast.LENGTH_SHORT).show();
+	    		 Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
 	    		 return;
 	    	 }
 	    	 
 	         ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
 	         
-	         if(resultList == null) Log.e("search", "Erro when converting string to a list");
+	         if(resultList == null) Log.e("search", "Error when converting string to a list");
 	         else{	        	 
 	        	 mWebPage.loadUrl(resultList.get(0).getLink());
 	         }

@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
 	private ImageView mBlurImage;
 	private FrameLayout mContentFrame;
 	private WebView mWebPage;
+	private MenuItem mSearchMenuItem;
 
 	private ActionBarDrawerToggle mDrawerToggle;
 
@@ -140,13 +141,14 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		// Associate searchable configuration with the SearchView
 	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+	    mSearchMenuItem = menu.findItem(R.id.search);
+	    
+	    SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
 	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 	    searchView.setOnQueryTextListener(new OnQueryTextListener() {
 			
 			@Override
 			public boolean onQueryTextSubmit(String query) {
-				// TODO Auto-generated method stub
 				//Toast.makeText(getApplicationContext(), "Teste", Toast.LENGTH_LONG).show();
 				boolean haveNet = isNetworkAvailable();
 				if(haveNet == false){
@@ -170,10 +172,10 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		});
+	    
 		return true;
 	}
 
@@ -356,6 +358,10 @@ public class MainActivity extends Activity {
 	         
 	         if(resultList == null) Log.e("search", "Erro when converting string to a list");
 	         else{
+	        	 if (mSearchMenuItem != null) {
+	        		 mSearchMenuItem.collapseActionView();
+	        	 }
+	        	 
 	        	 mWebPage.loadUrl(resultList.get(0).getLink());
 	         }
 	         

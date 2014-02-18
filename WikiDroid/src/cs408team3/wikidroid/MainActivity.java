@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -42,6 +43,8 @@ public class MainActivity extends Activity {
 	
 	private static final int ACTIONBAR_NORMAL_TITLE = 0x1;
 	private static final int ACTIONBAR_DRAWER_TITLE = 0x2;
+	
+	private static final String STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
 
 	// TODO: remove
 	private List<String> mListTitles = new ArrayList<String>();
@@ -61,10 +64,14 @@ public class MainActivity extends Activity {
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
+	
+	// Indicator for that web page has already been loaded at least once
+	private boolean mFirstPageLoaded = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_PROGRESS);
 		setContentView(R.layout.activity_main);
 		
 		mTitle = mDrawerTitle = getTitle();
@@ -88,10 +95,12 @@ public class MainActivity extends Activity {
 			public void onPageFinished(WebView view, String url) {
 				Log.i(TAG, "Page " + url + " loaded");
 				
-				setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
+				// Mark that we have already loaded at least one web page
+				if (!mFirstPageLoaded) {
+					mFirstPageLoaded = !mFirstPageLoaded;
+				}
 				
-				// Make sure ProgressBar is gone
-				stopWebProgressBar();
+				setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
 			}
 		});
 		mWebPage.setWebChromeClient(new WebChromeClient() {
@@ -99,14 +108,22 @@ public class MainActivity extends Activity {
 			public void onProgressChanged(WebView view, int progress) {
 				Log.v(TAG, "Page load progress " + progress);
 				
-				// Make sure ProgressBar is visible
-				if (progress < 100) {
-					startWebProgressBar();
-				}
 				
-				// Make sure ProgressBar is gone
-				if (progress == 100) {
-					stopWebProgressBar();
+				if (!mFirstPageLoaded) {
+					// No web page loaded before
+					// Using Progress Bar as an loading indicator
+					if (progress < 100) {
+						startWebProgressBar();
+					}
+					
+					if (progress == 100) {
+						stopWebProgressBar();
+					}
+				} else {
+					// Web page has been loaded before
+					// Using Window.FEATURE_PROGRESS as an loading indicator
+					// TODO: the indicator needs to be improved
+					setProgress(progress * 100);
 				}
 			}
 		});
@@ -124,6 +141,20 @@ public class MainActivity extends Activity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		outState.putBoolean(STATE_FIRST_PAGE_LOADED, mFirstPageLoaded);
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		
+		mFirstPageLoaded = savedInstanceState.getBoolean(STATE_FIRST_PAGE_LOADED, false);
 	}
 
 	@Override

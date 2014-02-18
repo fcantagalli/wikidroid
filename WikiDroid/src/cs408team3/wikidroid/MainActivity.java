@@ -34,7 +34,6 @@ import cs408team3.wikidroid.blur.BlurTask;
 import cs408team3.wikidroid.blur.Utils;
 import cs408team3.wikidroid.search.HttpClientExample;
 import cs408team3.wikidroid.search.QueryContentHolder;
-import cs408team3.wikidroid.languages.Languages;
 
 public class MainActivity extends Activity {
 

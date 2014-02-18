@@ -1,25 +1,6 @@
 package cs408team3.wikidroid.languages;
 
-import java.util.*;
-import java.io.*;
-import java.lang.*;
-import java.net.URL;
-import java.net.URLConnection;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.simple.*;
-import org.json.simple.parser.*;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,6 +9,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.http.client.methods.HttpPost;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 

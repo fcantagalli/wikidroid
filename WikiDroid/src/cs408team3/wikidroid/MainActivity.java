@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -32,8 +31,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
-import cs408team3.wikidroid.search.HttpClientSearch;
-import cs408team3.wikidroid.search.QueryContentHolder;
+import cs408team3.wikidroid.search.SearchArticle;
 
 public class MainActivity extends Activity {
 
@@ -228,7 +226,7 @@ public class MainActivity extends Activity {
                         mSearchMenuItem.collapseActionView();
                     }
 
-                    SearchArticle search = new SearchArticle(getApplicationContext());
+                    SearchArticle search = new SearchArticle(getApplicationContext(), mWebPage);
                     search.execute(query);
 
                     return true;
@@ -270,7 +268,8 @@ public class MainActivity extends Activity {
 
     private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
 
-        private Bitmap   scaled;
+        private Bitmap scaled;
+
         // private BlurTask blurTask;
 
         public WikiDroidActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
@@ -336,58 +335,6 @@ public class MainActivity extends Activity {
             mBlurImage.invalidate();
         }
 
-    }
-
-    private class SearchArticle extends AsyncTask<String, Integer, String> {
-
-        private static final String TAG = "SearchArticle";
-
-        private Context          context;
-        private HttpClientSearch search;
-
-        public SearchArticle(Context context) {
-            this.context = context;
-            search = new HttpClientSearch();
-        }
-
-        @Override
-        protected String doInBackground(String... query) {
-            String result = search.searchGoogle(query[0]);
-
-            publishProgress(50);
-
-            return result;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            // setProgressPercent(progress[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result == null) {
-                Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else if (result.equals("wrong url")) {
-                Toast.makeText(context, R.string.error_internal, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else if (result.equals("IOException")) {
-                Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
-
-            if (resultList == null)
-                Log.e(TAG, "Error when converting string to a list");
-            else {
-                mWebPage.loadUrl(resultList.get(0).getLink());
-            }
-
-        }
     }
 
     private void setTitle(String title, int status) {

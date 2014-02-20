@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,6 +65,7 @@ public class MainActivity extends Activity {
 		
 		mWebPage = (WebView) findViewById(R.id.webView1);
 		mWebPage.getSettings().setBuiltInZoomControls(true);
+		mWebPage.getSettings().setDisplayZoomControls(false);
 
 		//mWebPage.setWebViewClient(new MyWebViewClient(getApplicationContext()));
 		mWebPage.setWebViewClient(new WebViewClient());
@@ -164,14 +166,19 @@ public class MainActivity extends Activity {
 			public boolean onQueryTextSubmit(String query) {
 				// TODO Auto-generated method stub
 				//Toast.makeText(getApplicationContext(), "Teste", Toast.LENGTH_LONG).show();
+				Log.i("QUERY","value:"+query+"__");
 				boolean haveNet = isNetworkAvailable();
 				if(haveNet == false){
-					Toast.makeText(getApplicationContext(), "Sorry, No internet connection", Toast.LENGTH_SHORT).show();
+					Toast t = Toast.makeText(getApplicationContext(), "Sorry, No internet connection", Toast.LENGTH_SHORT);
+					t.setGravity(Gravity.CENTER, 5, 5);
+					t.show();
 					return false;
 				}
 				else{
 					if(verifyString(query) == false){
-						Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT).show();
+						Toast t = Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT);
+						t.setGravity(Gravity.CENTER, 5, 5);
+						t.show();
 						return false;
 					}
 					if(verifyString(query) == false) 
@@ -233,16 +240,19 @@ public class MainActivity extends Activity {
 	     * @return 
 	     */
 	 private boolean verifyString(String term){
-	        if(term == null){
+	     
+		 String aux = term.replaceAll("[^\\w]", "");
+		 
+		 if(aux == null){
 	            System.err.println("term is null");
 	            return false;
 	        }
-	        if(term.equals("")){
+	        if(aux.equals("")){
 	            System.err.println("term is empty");
 	            return false;
 	        }
-	        String aux = term.replaceAll(" ", "");
-	        if(term.equals("")){
+	        
+	        if(aux.equals("")){
 	            System.err.println("term is just blanket spaces");
 	            return false;
 	        }
@@ -258,6 +268,7 @@ public class MainActivity extends Activity {
 	        	System.err.println("term is just \"\"");
 	            return false;
 	        }
+
 	        return true;
 	    }
 	

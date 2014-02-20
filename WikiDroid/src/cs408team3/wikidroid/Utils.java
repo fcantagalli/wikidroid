@@ -13,13 +13,14 @@ import android.view.View;
 
 public class Utils {
 
-    // public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width, int height, int downSampling, Drawable drawable) {
+    // public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width,
+    // int height, int downSampling, Drawable drawable) {
     public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width, int height, int downSampling) {
         float scale = 1f / downSampling;
         int heightCopy = view.getHeight();
         view.layout(0, 0, width, height);
-        int bmpWidth = (int)(width * scale);
-        int bmpHeight = (int)(height * scale);
+        int bmpWidth = (int) (width * scale);
+        int bmpHeight = (int) (height * scale);
         if (dest == null || dest.getWidth() != bmpWidth || dest.getHeight() != bmpHeight) {
             dest = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888);
         }
@@ -33,64 +34,69 @@ public class Utils {
         view.layout(0, 0, width, heightCopy);
         return dest;
     }
-    
+
     /**
      * Trim Wikipedia title.
      * 
      * For example, "Wikipedia - Wikipedia, the free encyclopedia" will be
      * trimed to "Wikipedia".
      * 
-     * @param title Original Wikipedia title.
+     * @param title
+     *            Original Wikipedia title.
      * @return Trimed title.
      */
     public static String trimWikipediaTitle(String title) {
-    	String nTitle = new String(title.split(" - ")[0]);
-    	
-    	return nTitle;
+        String nTitle = new String(title.split(" - ")[0]);
+
+        return nTitle;
     }
-    
-	/**
-	 * Test if there is available network to search on internet
-	 * @return
-	 */
-	public static boolean isNetworkAvailable(Context context) {
-		 ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		 NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		 
-		 return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	}
-	
-	/**
-	 * Method to test if the search term String is valid or not.
-	 * Test if its null, blank " " or "".
-	 * @param term Search term String.
-	 * @param TAG Activity tag for debugging purpose.
-	 * @return 
-	 */
-	public static boolean verifySearchString(String term, String TAG){
-        if(term == null){
+
+    /**
+     * Test if there is available network to search on internet
+     * 
+     * @return
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    /**
+     * Method to test if the search term String is valid or not.
+     * Test if its null, blank " " or "".
+     * 
+     * @param term
+     *            Search term String.
+     * @param TAG
+     *            Activity tag for debugging purpose.
+     * @return
+     */
+    public static boolean verifySearchString(String term, String TAG) {
+        if (term == null) {
             Log.w(TAG, "term is null");
             return false;
         }
-        if(term.equals("")){
-        	Log.w(TAG, "term is empty");
+        if (term.equals("")) {
+            Log.w(TAG, "term is empty");
             return false;
         }
-        //String aux = term.replaceAll(" ", "");
-        if(term.equals("")){
-        	Log.w(TAG, "term is just blanket spaces");
+        // String aux = term.replaceAll(" ", "");
+        if (term.equals("")) {
+            Log.w(TAG, "term is just blanket spaces");
             return false;
         }
-        if(term.equals("@")){
-        	Log.w(TAG, "term is just @");
+        if (term.equals("@")) {
+            Log.w(TAG, "term is just @");
             return false;
         }
-        if(term.equals("&")){
-        	Log.w(TAG, "term is just &");
+        if (term.equals("&")) {
+            Log.w(TAG, "term is just &");
             return false;
         }
-        if(term.equals("\"\"")){
-        	Log.w(TAG, "term is just \"\"");
+        if (term.equals("\"\"")) {
+            Log.w(TAG, "term is just \"\"");
             return false;
         }
         return true;

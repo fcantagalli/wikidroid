@@ -7,12 +7,12 @@
 package cs408team3.wikidroid.search;
 
 /**
- *
+ * 
  * @author Felipe
  */
 public class QueryContentHolder {
-    
-	String title;
+
+    String title;
     String link;
     String displayLink;
 
@@ -27,30 +27,28 @@ public class QueryContentHolder {
         return "QueryContentHolder{" + "title=" + title + ", link=" + link + ", displayLink=" + displayLink + '}';
     }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getLink() {
-		return link;
-	}
+    public String getLink() {
+        return link;
+    }
 
-	public void setLink(String link) {
-		this.link = link;
-	}
+    public void setLink(String link) {
+        this.link = link;
+    }
 
-	public String getDisplayLink() {
-		return displayLink;
-	}
+    public String getDisplayLink() {
+        return displayLink;
+    }
 
-	public void setDisplayLink(String displayLink) {
-		this.displayLink = displayLink;
-	}
-    
-    
-    
+    public void setDisplayLink(String displayLink) {
+        this.displayLink = displayLink;
+    }
+
 }

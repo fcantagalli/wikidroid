@@ -30,46 +30,52 @@ import android.util.Log;
 
 public class HttpClientExample {
 
-    private final String USER_AGENT = "Mozilla/5.0";
-    private final String API_KEY = "AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA";
-    private final String SEARCH_ENGINE_ID = "015353232511339500776:ppncxs5ywr4";
-    private final String QUERY_FIELDS = "items(displayLink,link,title)";
+    private final String        USER_AGENT       = "Mozilla/5.0";
+    private final String        API_KEY          = "AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA";
+    private final String        SEARCH_ENGINE_ID = "015353232511339500776:ppncxs5ywr4";
+    private final String        QUERY_FIELDS     = "items(displayLink,link,title)";
 
-    private final static String test = "{ \"items\": [  {   \"title\": \"Brazil - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (disambiguation) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(disambiguation)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national football team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_football_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil, Indiana - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil,_Indiana\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (1985 film) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(1985_film)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazilian - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazilian\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil women's national basketball team - Wikipedia, the free ...\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_women's_national_basketball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national baseball team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_baseball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national futsal team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_futsal_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national beach soccer team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_beach_soccer_team\",   \"displayLink\": \"en.wikipedia.org\"  } ]}";
+    private final static String test             = "{ \"items\": [  {   \"title\": \"Brazil - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (disambiguation) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(disambiguation)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national football team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_football_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil, Indiana - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil,_Indiana\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (1985 film) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(1985_film)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazilian - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazilian\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil women's national basketball team - Wikipedia, the free ...\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_women's_national_basketball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national baseball team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_baseball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national futsal team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_futsal_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national beach soccer team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_beach_soccer_team\",   \"displayLink\": \"en.wikipedia.org\"  } ]}";
+
     /*
-    //&fields=items(displayLink%2Clink%2Ctitle)
-    public static void main(String[] args) throws Exception {
-
-        HttpClientExample http = new HttpClientExample();
-
-       // String url = "http://www.google.com/search?q=developer";
-       // System.out.println("Sending request to: "+url); 
-
-        System.out.println("Testing 1 - Send Http GET request");
-		//http.sendGet(url);
-        String result = http.searchGoogle("brazil");
-        System.out.println(result);
-        
-        ArrayList<QueryContentHolder> parsed = http.JSONToArray(result);
-        System.out.println(parsed);
-	//System.out.println("\nTesting 2 - Send Http POST request");
-        //http.sendPost();
-
-    }
-*/
+     * //&fields=items(displayLink%2Clink%2Ctitle)
+     * public static void main(String[] args) throws Exception {
+     * 
+     * HttpClientExample http = new HttpClientExample();
+     * 
+     * // String url = "http://www.google.com/search?q=developer";
+     * // System.out.println("Sending request to: "+url);
+     * 
+     * System.out.println("Testing 1 - Send Http GET request");
+     * //http.sendGet(url);
+     * String result = http.searchGoogle("brazil");
+     * System.out.println(result);
+     * 
+     * ArrayList<QueryContentHolder> parsed = http.JSONToArray(result);
+     * System.out.println(parsed);
+     * //System.out.println("\nTesting 2 - Send Http POST request");
+     * //http.sendPost();
+     * 
+     * }
+     */
     /**
-     * Parse a string in format of JSON to a arrayList that each elements contains the title, link and displaylink.
+     * Parse a string in format of JSON to a arrayList that each elements
+     * contains the title, link and displaylink.
+     * 
      * @param JSONString
-     * @return 
+     * @return
      */
     public ArrayList<QueryContentHolder> JSONToArray(String JSONString) {
         // parse the string result to an JSONObject
         Object parsed = JSONValue.parse(JSONString);
         JSONObject json = (JSONObject) parsed;
 
-       // System.out.println("KEYS : " + json.keySet());
-       // System.out.println("ITEMS : \n" + json.get("items"));
-        /* get the element items, this element have the title, link and displaylink*/
+        // System.out.println("KEYS : " + json.keySet());
+        // System.out.println("ITEMS : \n" + json.get("items"));
+        /*
+         * get the element items, this element have the title, link and
+         * displaylink
+         */
         JSONArray items = (JSONArray) json.get("items");
         ArrayList<QueryContentHolder> linksFounded = null;
 
@@ -85,7 +91,7 @@ public class HttpClientExample {
 
             linksFounded.add(new QueryContentHolder((String) aux.get("title"),
                     (String) aux.get("link"), (String) aux.get("displayLink")));
-            
+
         }
 
         return linksFounded;
@@ -94,52 +100,49 @@ public class HttpClientExample {
 
     public String searchGoogle(String content) {
         String result = null;
-            //example
-        //https://www.googleapis.com/customsearch/v1?q=brasil&cref=*.wikipedia.org&cx=015353232511339500776%3Appncxs5ywr4&key=AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA
+        // example
+        // https://www.googleapis.com/customsearch/v1?q=brasil&cref=*.wikipedia.org&cx=015353232511339500776%3Appncxs5ywr4&key=AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA
         String query = "https://www.googleapis.com/customsearch/v1?"
                 + "key=" + API_KEY + "&cx=" + SEARCH_ENGINE_ID + "&q=" + content + "&cref=*.wikipedia.org/*"
                 + "&fields=" + QUERY_FIELDS;
-        Log.i("search","Custom request: \n" + query);
-        for (int i = 0; i < 2; i++){
-	        try {
-	            result = sendGet(query);
-	            return result;
-	        } 
-	        catch(IllegalArgumentException ex){
-	        	Log.i("HTTPGET",ex.getMessage());
-	            Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
-	            result = "wrong url";
-	            return result;
-	        }
-	        catch (ClientProtocolException ex) {
-	        	Log.i("HTTPGET", ex.getMessage());
-	            Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
-	        }
-	        catch(IOException ex){
-	        	Log.i("HTTPGET",ex.getMessage());
-	            Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
-	            result = "IOException";
-	            return result;
-	        }
-	        
+        Log.i("search", "Custom request: \n" + query);
+        for (int i = 0; i < 2; i++) {
+            try {
+                result = sendGet(query);
+                return result;
+            } catch (IllegalArgumentException ex) {
+                Log.i("HTTPGET", ex.getMessage());
+                Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+                result = "wrong url";
+                return result;
+            } catch (ClientProtocolException ex) {
+                Log.i("HTTPGET", ex.getMessage());
+                Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Log.i("HTTPGET", ex.getMessage());
+                Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+                result = "IOException";
+                return result;
+            }
+
         }
         return null;
     }
-    
-    // HTTP GET request
-    private String sendGet(String URL) throws IllegalArgumentException, IOException, ClientProtocolException  {
 
-        //CloseableHttpClient client = HttpClients.createDefault();
-    	HttpClient client = new DefaultHttpClient();
+    // HTTP GET request
+    private String sendGet(String URL) throws IllegalArgumentException, IOException, ClientProtocolException {
+
+        // CloseableHttpClient client = HttpClients.createDefault();
+        HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(URL);
         // add request header
-        //request.addHeader("User-Agent", USER_AGENT);
+        // request.addHeader("User-Agent", USER_AGENT);
 
         HttpResponse response = client.execute(request);
 
-        Log.i("search","\nSending 'GET' request to URL : " + URL);
-        Log.i("search","Response Code : "
-                + response.getStatusLine().getStatusCode()+"\n");
+        Log.i("search", "\nSending 'GET' request to URL : " + URL);
+        Log.i("search", "Response Code : "
+                + response.getStatusLine().getStatusCode() + "\n");
 
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
@@ -149,8 +152,8 @@ public class HttpClientExample {
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
-        //String res = result.toString().split("\n")[1];
-        //System.out.println("\n"+result.toString());
+        // String res = result.toString().split("\n")[1];
+        // System.out.println("\n"+result.toString());
 
         return result.toString();
     }
@@ -194,5 +197,4 @@ public class HttpClientExample {
 
     }
 
-   
 }

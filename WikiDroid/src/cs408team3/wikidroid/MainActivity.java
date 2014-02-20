@@ -37,378 +37,385 @@ import cs408team3.wikidroid.search.QueryContentHolder;
 
 public class MainActivity extends Activity {
 
-	private static final String TAG = "MainActivity";
-	
-	private static final int ACTIONBAR_NORMAL_TITLE = 0x1;
-	private static final int ACTIONBAR_DRAWER_TITLE = 0x2;
-	
-	private static final String STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
+    private static final String   TAG                     = "MainActivity";
 
-	// TODO: remove
-	private List<String> mListTitles = new ArrayList<String>();
-	
-	private DrawerLayout mDrawerLayout;
-	
-	// TODO: replace
-	private ArrayAdapter<String> mDrawerListAdapter;
-	private ListView mDrawerList;
-	private ImageView mBlurImage;
-	private FrameLayout mContentFrame;
-	private WebView mWebPage;
-	private MenuItem mSearchMenuItem;
-	private ProgressBar mWebProgressBar;
+    private static final int      ACTIONBAR_NORMAL_TITLE  = 0x1;
+    private static final int      ACTIONBAR_DRAWER_TITLE  = 0x2;
 
-	private ActionBarDrawerToggle mDrawerToggle;
+    private static final String   STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
 
-	private CharSequence mDrawerTitle;
-	private CharSequence mTitle;
-	
-	// Indicator for that web page has already been loaded at least once
-	private boolean mFirstPageLoaded = false;
+    // TODO: remove
+    private List<String>          mListTitles             = new ArrayList<String>();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_PROGRESS);
-		setContentView(R.layout.activity_main);
-		
-		mTitle = mDrawerTitle = getTitle();
-		mWebPage = (WebView) findViewById(R.id.content_view);
-		mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-		mBlurImage = (ImageView) findViewById(R.id.blur_image);
-		mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
+    private DrawerLayout          mDrawerLayout;
 
-		mDrawerToggle = new WikiDroidActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+    // TODO: replace
+    private ArrayAdapter<String>  mDrawerListAdapter;
+    private ListView              mDrawerList;
+    private ImageView             mBlurImage;
+    private FrameLayout           mContentFrame;
+    private WebView               mWebPage;
+    private MenuItem              mSearchMenuItem;
+    private ProgressBar           mWebProgressBar;
 
-		// Set the drawer toggle as the DrawerListener
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		
-		// Setup mWebPage
-		mWebPage.getSettings().setBuiltInZoomControls(true);
-		mWebPage.getSettings().setDisplayZoomControls(false);
-		mWebPage.setWebViewClient(new WebViewClient() {
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				Log.i(TAG, "Page " + url + " loaded");
-				
-				// Mark that we have already loaded at least one web page
-				if (!mFirstPageLoaded) {
-					mFirstPageLoaded = !mFirstPageLoaded;
-				}
-				
-				setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
-			}
-		});
-		mWebPage.setWebChromeClient(new WebChromeClient() {
-			@Override
-			public void onProgressChanged(WebView view, int progress) {
-				Log.v(TAG, "Page load progress " + progress);
-				
-				
-				if (!mFirstPageLoaded) {
-					// No web page loaded before
-					// Using Progress Bar as an loading indicator
-					if (progress < 100) {
-						startWebProgressBar();
-					}
-					
-					if (progress == 100) {
-						stopWebProgressBar();
-					}
-				} else {
-					// Web page has been loaded before
-					// Using Window.FEATURE_PROGRESS as an loading indicator
-					// TODO: the indicator needs to be improved
-					setProgress(progress * 100);
-				}
-			}
-		});
+    private ActionBarDrawerToggle mDrawerToggle;
 
-		// TODO: replace
-		// Set the adapter for the list view
-		mDrawerListAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, R.id.drawer_list_item_text, mListTitles);
-		mDrawerList.setAdapter(mDrawerListAdapter);
+    private CharSequence          mDrawerTitle;
+    private CharSequence          mTitle;
 
-		// Set the list's click listener
-		// mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+    // Indicator for that web page has already been loaded at least once
+    private boolean               mFirstPageLoaded        = false;
 
-		// Disable Drawer Scrim Color
-		mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+        setContentView(R.layout.activity_main);
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-	}
+        mTitle = mDrawerTitle = getTitle();
+        mWebPage = (WebView) findViewById(R.id.content_view);
+        mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mBlurImage = (ImageView) findViewById(R.id.blur_image);
+        mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		
-		outState.putBoolean(STATE_FIRST_PAGE_LOADED, mFirstPageLoaded);
-	}
-	
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		
-		mFirstPageLoaded = savedInstanceState.getBoolean(STATE_FIRST_PAGE_LOADED, false);
-	}
+        mDrawerToggle = new WikiDroidActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    // Check if the key event was the Back button and if there's history
-	    if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebPage.canGoBack()) {
-	        mWebPage.goBack();
-	        return true;
-	    }
-	    // If it wasn't the Back key or there's no web page history, bubble up to the default
-	    // system behavior (probably exit the activity)
-	    return super.onKeyDown(keyCode, event);
-	}
-	
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
-	}
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
+        // Setup mWebPage
+        mWebPage.getSettings().setBuiltInZoomControls(true);
+        mWebPage.getSettings().setDisplayZoomControls(false);
+        mWebPage.setWebViewClient(new WebViewClient() {
 
-	// Called whenever we call invalidateOptionsMenu()
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// If the nav drawer is open, show / hide action items related to the
-		// content view
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		
-		// Show Add tab
-		menu.findItem(R.id.action_add_tab).setVisible(drawerOpen);
-		// Hide search
-		menu.findItem(R.id.search).setVisible(!drawerOpen);
-		
-		return super.onPrepareOptionsMenu(menu);
-	}
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                Log.i(TAG, "Page " + url + " loaded");
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		// Associate searchable configuration with the SearchView
-	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    mSearchMenuItem = menu.findItem(R.id.search);
-	    
-	    SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
-	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-	    searchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				//Toast.makeText(getApplicationContext(), "Teste", Toast.LENGTH_LONG).show();
-				boolean haveNet = Utils.isNetworkAvailable(getApplicationContext());
-				if(haveNet == false){
-					Toast.makeText(getApplicationContext(), R.string.error_no_internet, Toast.LENGTH_SHORT).show();
-					return false;
-				}
-				else{
-					if(!Utils.verifySearchString(query, TAG)){
-						Toast.makeText(getApplicationContext(), R.string.error_invalid_input, Toast.LENGTH_SHORT).show();
-						return false;
-					}
-					
-					if (mSearchMenuItem != null) {
-						mSearchMenuItem.collapseActionView();
-					}
-					
-					SearchArticle search = new SearchArticle(getApplicationContext());
-					search.execute(query);
-					
-					return true;
-				}
-			}
-			
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				return false;
-			}
-		});
-	    
-		return true;
-	}
+                // Mark that we have already loaded at least one web page
+                if (!mFirstPageLoaded) {
+                    mFirstPageLoaded = !mFirstPageLoaded;
+                }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Pass the event to ActionBarDrawerToggle, if it returns
-		// true, then it has handled the app icon touch event
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-		// Handle your other action bar items...
-		switch(item.getItemId()) {
-		case R.id.action_add_tab:
-			// TODO: remove
-			mListTitles.add("New Tab");
-			mDrawerListAdapter.notifyDataSetChanged();
-			
-			return true;
-		case R.id.languages:
-			// TODO: ADD LANGUAGE CODE HERE
+                setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
+            }
+        });
+        mWebPage.setWebChromeClient(new WebChromeClient() {
 
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
-	private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
+            @Override
+            public void onProgressChanged(WebView view, int progress) {
+                Log.v(TAG, "Page load progress " + progress);
 
-		private Bitmap scaled;
-		private BlurTask blurTask;
+                if (!mFirstPageLoaded) {
+                    // No web page loaded before
+                    // Using Progress Bar as an loading indicator
+                    if (progress < 100) {
+                        startWebProgressBar();
+                    }
 
-		public WikiDroidActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
-			super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
-		}
+                    if (progress == 100) {
+                        stopWebProgressBar();
+                    }
+                } else {
+                    // Web page has been loaded before
+                    // Using Window.FEATURE_PROGRESS as an loading indicator
+                    // TODO: the indicator needs to be improved
+                    setProgress(progress * 100);
+                }
+            }
+        });
 
-		@Override
-		public void onDrawerSlide(View drawerView, float slideOffset) {
-			super.onDrawerSlide(drawerView, slideOffset);
-			if (slideOffset > 0.0f) {
-				setBlurAlpha(slideOffset);
-			} else {
-				clearBlurImage();
-			}
-		}
+        // TODO: replace
+        // Set the adapter for the list view
+        mDrawerListAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, R.id.drawer_list_item_text, mListTitles);
+        mDrawerList.setAdapter(mDrawerListAdapter);
 
-		// Called when a drawer has settled in a completely closed state.
-		@Override
-		public void onDrawerClosed(View view) {
-			super.onDrawerClosed(view);
-			toggleTitle(ACTIONBAR_NORMAL_TITLE);
-			clearBlurImage(); // Clear background blur
-			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-		}
+        // Set the list's click listener
+        // mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-		// Called when a drawer has settled in a completely open state.
-		@Override
-		public void onDrawerOpened(View drawerView) {
-			super.onDrawerOpened(drawerView);
-			toggleTitle(ACTIONBAR_DRAWER_TITLE);
-			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-		}
+        // Disable Drawer Scrim Color
+        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 
-		private void setBlurAlpha(float slideOffset) {
-			if (mBlurImage.getVisibility() != View.VISIBLE) {
-				setBlurImage();
-			}
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+    }
 
-			mBlurImage.setAlpha(slideOffset);
-		}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-		private void setBlurImage() {
-			mBlurImage.setImageBitmap(null);
-			mBlurImage.setVisibility(View.VISIBLE);
+        outState.putBoolean(STATE_FIRST_PAGE_LOADED, mFirstPageLoaded);
+    }
 
-			scaled = Utils.drawViewToBitmap(scaled, mContentFrame, mContentFrame.getWidth(), mContentFrame.getHeight(), Blur.DEFAULT_DOWNSAMPLING);
-			blurTask = new BlurTask(mContentFrame.getContext(), null, scaled);
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
-			mBlurImage.setImageBitmap(scaled);
-			Log.v(TAG, "BlurImage set");
-		}
+        mFirstPageLoaded = savedInstanceState.getBoolean(STATE_FIRST_PAGE_LOADED, false);
+    }
 
-		private void clearBlurImage() {
-			mBlurImage.setVisibility(View.GONE);
-			mBlurImage.setImageBitmap(null);
-			blurTask = null;
-		}
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Check if the key event was the Back button and if there's history
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebPage.canGoBack()) {
+            mWebPage.goBack();
+            return true;
+        }
+        // If it wasn't the Back key or there's no web page history, bubble up
+        // to the default
+        // system behavior (probably exit the activity)
+        return super.onKeyDown(keyCode, event);
+    }
 
-		@Override
-		public void onBlurOperationFinished() {
-			mBlurImage.invalidate();
-		}
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
-	}
-	
-	private class SearchArticle extends AsyncTask<String, Integer, String> {
-		
-		Context context;
-		HttpClientExample search;
-		
-		public SearchArticle(Context context) {
-			this.context = context;
-			search = new HttpClientExample();
-			// TODO Auto-generated constructor stub
-		}
-		
-	    protected String doInBackground(String... query) {
-	    	
-	    	String result = search.searchGoogle(query[0]);
-	 
-	        publishProgress(50);
-	            
-	        return result;
-	     }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
-	     protected void onProgressUpdate(Integer... progress) {
-	         //setProgressPercent(progress[0]);
-	     }
+    // Called whenever we call invalidateOptionsMenu()
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, show / hide action items related to the
+        // content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 
-	     protected void onPostExecute(String result) {
-	    	 if(result == null) {
-	    		 Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
-	    		 return;
-	    	 }
-	    	 else if(result.equals("wrong url")) {
-	    		 Toast.makeText(context, R.string.error_internal, Toast.LENGTH_SHORT).show();
-	    		 return;
-	    	 }
-	    	 else if(result.equals("IOException")) {
-	    		 Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
-	    		 return;
-	    	 }
-	    	 
-	         ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
-	         
-	         if(resultList == null) Log.e("search", "Error when converting string to a list");
-	         else{	        	 
-	        	 mWebPage.loadUrl(resultList.get(0).getLink());
-	         }
-	         
-	     }
-	}
-	
-	private void setTitle(String title, int status) {
-		switch(status) {
-		case ACTIONBAR_NORMAL_TITLE:
-			if (title != null)
-				mTitle = title;
-			getActionBar().setTitle(mTitle);
-			return;
-		case ACTIONBAR_DRAWER_TITLE:
-			if (title != null)
-				mDrawerTitle = title;
-			getActionBar().setTitle(mDrawerTitle);
-			return;
-		}
-	}
-	
-	private void toggleTitle(int status) {
-		setTitle(null, status);
-	}
-	
-	private void startWebProgressBar() {
-		if (mWebProgressBar.getVisibility() != View.VISIBLE) {
-			mWebProgressBar.setVisibility(View.VISIBLE);
-		}
-	}
-	
-	private void stopWebProgressBar() {
-		if (mWebProgressBar.getVisibility() != View.GONE) {
-			mWebProgressBar.setVisibility(View.GONE);
-		}
-	}
+        // Show Add tab
+        menu.findItem(R.id.action_add_tab).setVisible(drawerOpen);
+        // Hide search
+        menu.findItem(R.id.search).setVisible(!drawerOpen);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mSearchMenuItem = menu.findItem(R.id.search);
+
+        SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Toast.makeText(getApplicationContext(), "Teste",
+                // Toast.LENGTH_LONG).show();
+                boolean haveNet = Utils.isNetworkAvailable(getApplicationContext());
+                if (haveNet == false) {
+                    Toast.makeText(getApplicationContext(), R.string.error_no_internet, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                else {
+                    if (!Utils.verifySearchString(query, TAG)) {
+                        Toast.makeText(getApplicationContext(), R.string.error_invalid_input, Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    if (mSearchMenuItem != null) {
+                        mSearchMenuItem.collapseActionView();
+                    }
+
+                    SearchArticle search = new SearchArticle(getApplicationContext());
+                    search.execute(query);
+
+                    return true;
+                }
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
+        switch (item.getItemId()) {
+        case R.id.action_add_tab:
+            // TODO: remove
+            mListTitles.add("New Tab");
+            mDrawerListAdapter.notifyDataSetChanged();
+
+            return true;
+        case R.id.languages:
+            // TODO: ADD LANGUAGE CODE HERE
+
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
+
+        private Bitmap   scaled;
+        private BlurTask blurTask;
+
+        public WikiDroidActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+            super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
+        }
+
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+            super.onDrawerSlide(drawerView, slideOffset);
+            if (slideOffset > 0.0f) {
+                setBlurAlpha(slideOffset);
+            } else {
+                clearBlurImage();
+            }
+        }
+
+        // Called when a drawer has settled in a completely closed state.
+        @Override
+        public void onDrawerClosed(View view) {
+            super.onDrawerClosed(view);
+            toggleTitle(ACTIONBAR_NORMAL_TITLE);
+            clearBlurImage(); // Clear background blur
+            invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+        }
+
+        // Called when a drawer has settled in a completely open state.
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            super.onDrawerOpened(drawerView);
+            toggleTitle(ACTIONBAR_DRAWER_TITLE);
+            invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+        }
+
+        private void setBlurAlpha(float slideOffset) {
+            if (mBlurImage.getVisibility() != View.VISIBLE) {
+                setBlurImage();
+            }
+
+            mBlurImage.setAlpha(slideOffset);
+        }
+
+        private void setBlurImage() {
+            mBlurImage.setImageBitmap(null);
+            mBlurImage.setVisibility(View.VISIBLE);
+
+            scaled = Utils.drawViewToBitmap(scaled, mContentFrame, mContentFrame.getWidth(), mContentFrame.getHeight(), Blur.DEFAULT_DOWNSAMPLING);
+            blurTask = new BlurTask(mContentFrame.getContext(), null, scaled);
+
+            mBlurImage.setImageBitmap(scaled);
+            Log.v(TAG, "BlurImage set");
+        }
+
+        private void clearBlurImage() {
+            mBlurImage.setVisibility(View.GONE);
+            mBlurImage.setImageBitmap(null);
+            blurTask = null;
+        }
+
+        @Override
+        public void onBlurOperationFinished() {
+            mBlurImage.invalidate();
+        }
+
+    }
+
+    private class SearchArticle extends AsyncTask<String, Integer, String> {
+
+        Context           context;
+        HttpClientExample search;
+
+        public SearchArticle(Context context) {
+            this.context = context;
+            search = new HttpClientExample();
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        protected String doInBackground(String... query) {
+
+            String result = search.searchGoogle(query[0]);
+
+            publishProgress(50);
+
+            return result;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            // setProgressPercent(progress[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result == null) {
+                Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            else if (result.equals("wrong url")) {
+                Toast.makeText(context, R.string.error_internal, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            else if (result.equals("IOException")) {
+                Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
+
+            if (resultList == null)
+                Log.e("search", "Error when converting string to a list");
+            else {
+                mWebPage.loadUrl(resultList.get(0).getLink());
+            }
+
+        }
+    }
+
+    private void setTitle(String title, int status) {
+        switch (status) {
+        case ACTIONBAR_NORMAL_TITLE:
+            if (title != null)
+                mTitle = title;
+            getActionBar().setTitle(mTitle);
+            return;
+        case ACTIONBAR_DRAWER_TITLE:
+            if (title != null)
+                mDrawerTitle = title;
+            getActionBar().setTitle(mDrawerTitle);
+            return;
+        }
+    }
+
+    private void toggleTitle(int status) {
+        setTitle(null, status);
+    }
+
+    private void startWebProgressBar() {
+        if (mWebProgressBar.getVisibility() != View.VISIBLE) {
+            mWebProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void stopWebProgressBar() {
+        if (mWebProgressBar.getVisibility() != View.GONE) {
+            mWebProgressBar.setVisibility(View.GONE);
+        }
+    }
 }

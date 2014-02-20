@@ -32,7 +32,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
 import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
-import cs408team3.wikidroid.search.HttpClientExample;
+import cs408team3.wikidroid.search.HttpClientSearch;
 import cs408team3.wikidroid.search.QueryContentHolder;
 
 public class MainActivity extends Activity {
@@ -338,18 +338,16 @@ public class MainActivity extends Activity {
 
     private class SearchArticle extends AsyncTask<String, Integer, String> {
 
-        Context           context;
-        HttpClientExample search;
+        private Context          context;
+        private HttpClientSearch search;
 
         public SearchArticle(Context context) {
             this.context = context;
-            search = new HttpClientExample();
-            // TODO Auto-generated constructor stub
+            search = new HttpClientSearch();
         }
 
         @Override
         protected String doInBackground(String... query) {
-
             String result = search.searchGoogle(query[0]);
 
             publishProgress(50);

@@ -28,14 +28,15 @@ import org.json.simple.JSONValue;
 
 import android.util.Log;
 
-public class HttpClientExample {
+public class HttpClientSearch {
 
-    private final String        USER_AGENT       = "Mozilla/5.0";
-    private final String        API_KEY          = "AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA";
-    private final String        SEARCH_ENGINE_ID = "015353232511339500776:ppncxs5ywr4";
-    private final String        QUERY_FIELDS     = "items(displayLink,link,title)";
+    private static final String USER_AGENT       = "Mozilla/5.0";
+    private static final String API_KEY          = "AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA";
+    private static final String SEARCH_ENGINE_ID = "015353232511339500776:ppncxs5ywr4";
+    private static final String QUERY_FIELDS     = "items(displayLink,link,title)";
 
-    private final static String test             = "{ \"items\": [  {   \"title\": \"Brazil - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (disambiguation) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(disambiguation)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national football team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_football_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil, Indiana - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil,_Indiana\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (1985 film) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(1985_film)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazilian - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazilian\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil women's national basketball team - Wikipedia, the free ...\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_women's_national_basketball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national baseball team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_baseball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national futsal team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_futsal_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national beach soccer team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_beach_soccer_team\",   \"displayLink\": \"en.wikipedia.org\"  } ]}";
+    // private final static String test =
+    // "{ \"items\": [  {   \"title\": \"Brazil - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (disambiguation) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(disambiguation)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national football team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_football_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil, Indiana - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil,_Indiana\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (1985 film) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(1985_film)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazilian - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazilian\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil women's national basketball team - Wikipedia, the free ...\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_women's_national_basketball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national baseball team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_baseball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national futsal team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_futsal_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national beach soccer team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_beach_soccer_team\",   \"displayLink\": \"en.wikipedia.org\"  } ]}";
 
     /*
      * //&fields=items(displayLink%2Clink%2Ctitle)
@@ -112,15 +113,15 @@ public class HttpClientExample {
                 return result;
             } catch (IllegalArgumentException ex) {
                 Log.i("HTTPGET", ex.getMessage());
-                Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(HttpClientSearch.class.getName()).log(Level.SEVERE, null, ex);
                 result = "wrong url";
                 return result;
             } catch (ClientProtocolException ex) {
                 Log.i("HTTPGET", ex.getMessage());
-                Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(HttpClientSearch.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Log.i("HTTPGET", ex.getMessage());
-                Logger.getLogger(HttpClientExample.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(HttpClientSearch.class.getName()).log(Level.SEVERE, null, ex);
                 result = "IOException";
                 return result;
             }
@@ -131,7 +132,6 @@ public class HttpClientExample {
 
     // HTTP GET request
     private String sendGet(String URL) throws IllegalArgumentException, IOException, ClientProtocolException {
-
         // CloseableHttpClient client = HttpClients.createDefault();
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(URL);
@@ -160,7 +160,6 @@ public class HttpClientExample {
 
     // HTTP POST request
     private void sendPost() throws Exception {
-
         String url = "https://selfsolve.apple.com/wcResults.do";
 
         HttpClient client = new DefaultHttpClient();

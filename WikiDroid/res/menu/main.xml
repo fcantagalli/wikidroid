@@ -14,7 +14,7 @@
         android:visible="false"/>
     <item
         android:id="@+id/languages"
-        android:title="Languages"/>
+        android:title="@string/action_languages"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

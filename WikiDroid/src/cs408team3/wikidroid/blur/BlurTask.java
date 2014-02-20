@@ -11,68 +11,70 @@ import android.util.Log;
 
 public class BlurTask {
 
-	protected static final String TAG = "BlurTask";
-	private Bitmap source;
-	private Canvas canvas;
-	private AsyncTask<Void, Void, Void> task;
-	private Bitmap blurred;
-	private Listener listener;
-	private Context context;
-	private int radius;
+    protected static final String       TAG = "BlurTask";
+    private Bitmap                      source;
+    private Canvas                      canvas;
+    private AsyncTask<Void, Void, Void> task;
+    private Bitmap                      blurred;
+    private Listener                    listener;
+    private Context                     context;
+    private int                         radius;
 
-	public interface Listener {
-		void onBlurOperationFinished();
-	}
+    public interface Listener {
 
-	public BlurTask(Context context, Listener listener, Bitmap source) {
-		this(context, listener, source, Blur.DEFAULT_BLUR_RADIUS);
-	}
+        void onBlurOperationFinished();
+    }
 
-	public BlurTask(Context context, Listener listener, Bitmap source, int radius) {
-		this.context = context;
-		this.listener = listener;
-		this.source = source;
-		this.radius = radius;
-		canvas = new Canvas(source);
-		startTask();
-	}
+    public BlurTask(Context context, Listener listener, Bitmap source) {
+        this(context, listener, source, Blur.DEFAULT_BLUR_RADIUS);
+    }
 
-	private void startTask() {
-		task = new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground(Void... args) {
-				blurSourceBitmap();
-				return null;
-			}
+    public BlurTask(Context context, Listener listener, Bitmap source, int radius) {
+        this.context = context;
+        this.listener = listener;
+        this.source = source;
+        this.radius = radius;
+        canvas = new Canvas(source);
+        startTask();
+    }
 
-			@Override
-			protected void onPostExecute(Void result) {
-				canvas.drawBitmap(blurred, 0, 0, null);
-				blurred.recycle();
-				
-				if (listener != null)
-					listener.onBlurOperationFinished();
-			}
-		};
-		task.execute();
-	}
+    private void startTask() {
+        task = new AsyncTask<Void, Void, Void>() {
 
-	private void blurSourceBitmap() {
-		Bitmap section = source;
-		if (section == null) {
-			// Probably indicates we've reached the end.
-			return;
-		}
-		long start = System.nanoTime();
-		blurred = Blur.apply(context, source, radius);
-		long delta = System.nanoTime() - start;
-		Log.v(TAG, "Blurring took " + delta / 1e6f + " ms");
-	}
+            @Override
+            protected Void doInBackground(Void... args) {
+                blurSourceBitmap();
+                return null;
+            }
 
-	public void cancel() {
-		if (task != null) {
-			task.cancel(true);
-		}
-		task = null;
-	}
+            @Override
+            protected void onPostExecute(Void result) {
+                canvas.drawBitmap(blurred, 0, 0, null);
+                blurred.recycle();
+
+                if (listener != null)
+                    listener.onBlurOperationFinished();
+            }
+        };
+        task.execute();
+    }
+
+    private void blurSourceBitmap() {
+        Bitmap section = source;
+        if (section == null) {
+            // Probably indicates we've reached the end.
+            return;
+        }
+        long start = System.nanoTime();
+        blurred = Blur.apply(context, source, radius);
+        long delta = System.nanoTime() - start;
+        Log.v(TAG, "Blurring took " + delta / 1e6f + " ms");
+    }
+
+    public void cancel() {
+        if (task != null) {
+            task.cancel(true);
+        }
+        task = null;
+    }
 }

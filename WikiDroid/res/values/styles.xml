@@ -36,7 +36,7 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wikidroid</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wikidroid</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Wikidroid</item>
-        <item name="android:displayOptions">showHome|useLogo|homeAsUp</item>
+        <item name="android:displayOptions">showHome|useLogo|homeAsUp|showTitle</item>
     </style>
 
     <style name="ActionBar.Transparent.Wikidroid" parent="@android:style/Widget.Holo.Light.ActionBar">

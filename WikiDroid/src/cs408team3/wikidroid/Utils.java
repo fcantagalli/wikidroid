@@ -39,14 +39,21 @@ public class Utils {
      * Trim Wikipedia title.
      * 
      * For example, "Wikipedia - Wikipedia, the free encyclopedia" will be
-     * trimed to "Wikipedia".
+     * Trimmed to "Wikipedia".
      * 
      * @param title
      *            Original Wikipedia title.
-     * @return Trimed title.
+     * @return Trimmed title. Or the original title if trimming failed.
      */
     public static String trimWikipediaTitle(String title) {
-        String nTitle = new String(title.split(" - ")[0]);
+        String[] splittedTitle = title.split(" - ");
+        String nTitle;
+
+        if (splittedTitle.length > 0) {
+            nTitle = new String(splittedTitle[0]);
+        } else {
+            nTitle = new String(title);
+        }
 
         return nTitle;
     }

@@ -271,7 +271,7 @@ public class MainActivity extends Activity {
     private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
 
         private Bitmap   scaled;
-        private BlurTask blurTask;
+        // private BlurTask blurTask;
 
         public WikiDroidActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
             super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
@@ -317,7 +317,9 @@ public class MainActivity extends Activity {
             mBlurImage.setVisibility(View.VISIBLE);
 
             scaled = Utils.drawViewToBitmap(scaled, mContentFrame, mContentFrame.getWidth(), mContentFrame.getHeight(), Blur.DEFAULT_DOWNSAMPLING);
-            blurTask = new BlurTask(mContentFrame.getContext(), null, scaled);
+            // blurTask = new BlurTask(mContentFrame.getContext(), null,
+            // scaled);
+            new BlurTask(mContentFrame.getContext(), null, scaled);
 
             mBlurImage.setImageBitmap(scaled);
             Log.v(TAG, "BlurImage set");
@@ -326,7 +328,7 @@ public class MainActivity extends Activity {
         private void clearBlurImage() {
             mBlurImage.setVisibility(View.GONE);
             mBlurImage.setImageBitmap(null);
-            blurTask = null;
+            // blurTask = null;
         }
 
         @Override
@@ -337,6 +339,8 @@ public class MainActivity extends Activity {
     }
 
     private class SearchArticle extends AsyncTask<String, Integer, String> {
+
+        private static final String TAG = "SearchArticle";
 
         private Context          context;
         private HttpClientSearch search;
@@ -378,7 +382,7 @@ public class MainActivity extends Activity {
             ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
 
             if (resultList == null)
-                Log.e("search", "Error when converting string to a list");
+                Log.e(TAG, "Error when converting string to a list");
             else {
                 mWebPage.loadUrl(resultList.get(0).getLink());
             }

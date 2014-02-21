@@ -46,16 +46,20 @@ public class Utils {
      * @return Trimmed title. Or the original title if trimming failed.
      */
     public static String trimWikipediaTitle(String title) {
-        String[] splittedTitle = title.split(" - ");
-        String nTitle;
+        if (title != null) {
+            String[] splittedTitle = title.split(" - ");
+            String nTitle;
 
-        if (splittedTitle.length > 0) {
-            nTitle = new String(splittedTitle[0]);
+            if (splittedTitle.length > 0) {
+                nTitle = new String(splittedTitle[0]);
+            } else {
+                nTitle = new String(title);
+            }
+
+            return nTitle;
         } else {
-            nTitle = new String(title);
+            return null;
         }
-
-        return nTitle;
     }
 
     /**

@@ -2,6 +2,7 @@ package cs408team3.wikidroid.tab;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,10 +39,13 @@ public class TabManager {
         this(context, DEFAULT_TAB_LIMIT, webViewClient, webChromeClient);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     public boolean newTab() {
         WebView webView = new WebView(mContext);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
+        // Try not to use JavaScript first
+        webView.getSettings().setJavaScriptEnabled(false);
         webView.setWebViewClient(mWebViewClient);
         webView.setWebChromeClient(mWebChromeClient);
 

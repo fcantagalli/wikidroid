@@ -26,9 +26,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import android.net.Uri;
 import android.util.Log;
 
-public class HttpClientSearch {
+public class WikiDroidHttpClient {
+
+    private static final String TAG              = "WikiDroidHttpClient";
 
     private static final String USER_AGENT       = "Mozilla/5.0";
     private static final String API_KEY          = "AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA";
@@ -103,9 +106,22 @@ public class HttpClientSearch {
         String result = null;
         // example
         // https://www.googleapis.com/customsearch/v1?q=brasil&cref=*.wikipedia.org&cx=015353232511339500776%3Appncxs5ywr4&key=AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA
-        String query = "https://www.googleapis.com/customsearch/v1?"
-                + "key=" + API_KEY + "&cx=" + SEARCH_ENGINE_ID + "&q=" + content + "&cref=*.wikipedia.org/*"
-                + "&fields=" + QUERY_FIELDS;
+        String query = "";
+        // query = "https://www.googleapis.com/customsearch/v1?"
+        // + "key=" + API_KEY + "&cx=" + SEARCH_ENGINE_ID + "&q=" + content
+        // + "&cref=*.wikipedia.org/*"
+        // + "&fields=" + QUERY_FIELDS;
+        Uri q = new Uri.Builder()
+        .scheme("https")
+        .authority("www.googleapis.com")
+        .path("/customsearch/v1")
+        .appendQueryParameter("key", API_KEY)
+        .appendQueryParameter("cx", SEARCH_ENGINE_ID)
+        .appendQueryParameter("q", content)
+        .appendQueryParameter("cref", "*.wikipedia.org/*")
+        .appendQueryParameter("fields", QUERY_FIELDS)
+        .build();
+        query = q.toString();
         Log.i("search", "Custom request: \n" + query);
         for (int i = 0; i < 2; i++) {
             try {
@@ -113,15 +129,15 @@ public class HttpClientSearch {
                 return result;
             } catch (IllegalArgumentException ex) {
                 Log.i("HTTPGET", ex.getMessage());
-                Logger.getLogger(HttpClientSearch.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(WikiDroidHttpClient.class.getName()).log(Level.SEVERE, null, ex);
                 result = "wrong url";
                 return result;
             } catch (ClientProtocolException ex) {
                 Log.i("HTTPGET", ex.getMessage());
-                Logger.getLogger(HttpClientSearch.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(WikiDroidHttpClient.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Log.i("HTTPGET", ex.getMessage());
-                Logger.getLogger(HttpClientSearch.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(WikiDroidHttpClient.class.getName()).log(Level.SEVERE, null, ex);
                 result = "IOException";
                 return result;
             }
@@ -131,7 +147,7 @@ public class HttpClientSearch {
     }
 
     // HTTP GET request
-    private String sendGet(String URL) throws IllegalArgumentException, IOException, ClientProtocolException {
+    public String sendGet(String URL) throws IllegalArgumentException, IOException, ClientProtocolException {
         // CloseableHttpClient client = HttpClients.createDefault();
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet(URL);

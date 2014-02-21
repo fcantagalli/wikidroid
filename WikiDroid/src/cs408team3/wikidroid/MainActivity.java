@@ -53,6 +53,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private WebView                mWebPage;
     private MenuItem               mSearchMenuItem;
     private ProgressBar            mWebProgressBar;
+    private Toast                  mToast;
 
     private ActionBarDrawerToggle  mDrawerToggle;
 
@@ -258,7 +259,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         switch (item.getItemId()) {
         case R.id.action_add_tab:
             if (!mTabManager.newTab()) {
-                Toast.makeText(this, R.string.error_max_tab_reached, Toast.LENGTH_SHORT).show();
+                if (mToast != null) {
+                    mToast.cancel();
+                }
+                mToast = Toast.makeText(this, R.string.error_max_tab_reached, Toast.LENGTH_SHORT);
+                mToast.show();
             } else {
                 mDrawerListAdapter.notifyDataSetChanged();
             }

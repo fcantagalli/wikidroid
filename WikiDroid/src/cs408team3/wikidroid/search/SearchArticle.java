@@ -19,7 +19,8 @@ public class SearchArticle extends AsyncTask<String, Integer, String> {
 
     public SearchArticle(Context context, WebView webPage) {
         this.context = context;
-        search = new HttpClientSearch();
+        this.search = new HttpClientSearch();
+        this.webPage = webPage;
     }
 
     @Override

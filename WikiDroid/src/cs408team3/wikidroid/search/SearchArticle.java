@@ -15,18 +15,18 @@ public class SearchArticle extends AsyncTask<String, Integer, String> {
     private static final String TAG = "SearchArticle";
 
     private Context             context;
-    private HttpClientSearch    search;
+    private WikiDroidHttpClient httpClient;
     private WebView             webPage;
 
     public SearchArticle(Context context, WebView webPage) {
         this.context = context;
-        search = new HttpClientSearch();
+        this.httpClient = new WikiDroidHttpClient();
         this.webPage = webPage;
     }
 
     @Override
     protected String doInBackground(String... query) {
-        String result = search.searchGoogle(query[0]);
+        String result = httpClient.searchGoogle(query[0]);
 
         publishProgress(50);
 
@@ -53,7 +53,7 @@ public class SearchArticle extends AsyncTask<String, Integer, String> {
             return;
         }
 
-        ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
+        ArrayList<QueryContentHolder> resultList = httpClient.JSONToArray(result);
 
         Log.i(TAG, "List:  " + resultList);
 
@@ -68,4 +68,5 @@ public class SearchArticle extends AsyncTask<String, Integer, String> {
         }
 
     }
+
 }

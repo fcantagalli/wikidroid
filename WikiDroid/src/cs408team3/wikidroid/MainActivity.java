@@ -1,8 +1,5 @@
 package cs408team3.wikidroid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -24,7 +21,7 @@ import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,37 +32,39 @@ import android.widget.Toast;
 import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
 import cs408team3.wikidroid.search.SearchArticle;
+import cs408team3.wikidroid.tab.TabManager;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
-    private static final String   TAG                     = "MainActivity";
+    private static final String    TAG                     = "MainActivity";
 
-    private static final int      ACTIONBAR_NORMAL_TITLE  = 0x1;
-    private static final int      ACTIONBAR_DRAWER_TITLE  = 0x2;
+    private static final int       ACTIONBAR_NORMAL_TITLE  = 0x1;
+    private static final int       ACTIONBAR_DRAWER_TITLE  = 0x2;
 
-    private static final String   STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
+    private static final String    STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
 
-    // TODO: remove
-    private List<String>          mListTitles             = new ArrayList<String>();
+    private TabManager             mTabManager;
+    private WebViewClient          mWebViewClient;
+    private WebChromeClient        mWebChromeClient;
 
-    private DrawerLayout          mDrawerLayout;
+    private DrawerLayout           mDrawerLayout;
 
-    // TODO: replace
-    private ArrayAdapter<String>  mDrawerListAdapter;
-    private ListView              mDrawerList;
-    private ImageView             mBlurImage;
-    private FrameLayout           mContentFrame;
-    private WebView               mWebPage;
-    private MenuItem              mSearchMenuItem;
-    private ProgressBar           mWebProgressBar;
+    private TabManager.ListAdapter mDrawerListAdapter;
+    private ListView               mDrawerList;
+    private ImageView              mBlurImage;
+    private FrameLayout            mContentFrame;
+    private WebView                mWebPage;
+    private MenuItem               mSearchMenuItem;
+    private ProgressBar            mWebProgressBar;
+    private Toast                  mToast;
 
-    private ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle  mDrawerToggle;
 
-    private CharSequence          mDrawerTitle;
-    private CharSequence          mTitle;
+    private CharSequence           mDrawerTitle;
+    private CharSequence           mTitle;
 
     // Indicator for that web page has already been loaded at least once
-    private boolean               mFirstPageLoaded        = false;
+    private boolean                mFirstPageLoaded        = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,25 +72,7 @@ public class MainActivity extends Activity {
         requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
 
-        mTitle = mDrawerTitle = getTitle();
-        mWebPage = (WebView) findViewById(R.id.content_view);
-        mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mBlurImage = (ImageView) findViewById(R.id.blur_image);
-        mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
-
-        mDrawerToggle = new WikiDroidActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
-
-        // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        // Setup mWebPage
-        mWebPage.getSettings().setBuiltInZoomControls(true);
-        // take off the zoom button, just use fingers to zoom in/out
-        mWebPage.getSettings().setDisplayZoomControls(false);
-        // this part is to handle new links on the same view.
-        mWebPage.setWebViewClient(new WebViewClient() {
+        mWebViewClient = new WebViewClient() {
 
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -102,10 +83,12 @@ public class MainActivity extends Activity {
                     mFirstPageLoaded = !mFirstPageLoaded;
                 }
 
-                setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
+                setTitle(mTabManager.getTitle(view), ACTIONBAR_NORMAL_TITLE);
+                // Refresh drawer list
+                mDrawerListAdapter.notifyDataSetChanged();
             }
-        });
-        mWebPage.setWebChromeClient(new WebChromeClient() {
+        };
+        mWebChromeClient = new WebChromeClient() {
 
             @Override
             public void onProgressChanged(WebView view, int progress) {
@@ -128,15 +111,37 @@ public class MainActivity extends Activity {
                     setProgress(progress * 100);
                 }
             }
-        });
+        };
 
-        // TODO: replace
+        mTabManager = new TabManager(this, mWebViewClient, mWebChromeClient);
+        if (mTabManager.size() == 0) {
+            mTabManager.newTab();
+        }
+
+        mDrawerTitle = getTitle();
+        mWebPage = mTabManager.getTab(0);
+        setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
+
+        mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mBlurImage = (ImageView) findViewById(R.id.blur_image);
+        mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
+
+        mContentFrame.addView(mWebPage, 0);
+
+        mDrawerToggle = new WikiDroidActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
         // Set the adapter for the list view
-        mDrawerListAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, R.id.drawer_list_item_text, mListTitles);
+        // TODO: Potential problem?
+        mDrawerListAdapter = mTabManager.new ListAdapter(this, R.layout.drawer_list_item, R.id.drawer_list_item_text);
         mDrawerList.setAdapter(mDrawerListAdapter);
 
         // Set the list's click listener
-        // mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemClickListener(this);
 
         // Disable Drawer Scrim Color
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
@@ -222,8 +227,7 @@ public class MainActivity extends Activity {
                     t.setGravity(Gravity.CENTER, 5, 5);
                     t.show();
                     return false;
-                }
-                else {
+                } else {
                     if (!Utils.verifySearchString(query, TAG)) {
                         Toast t = Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT);
                         t.setGravity(Gravity.CENTER, 5, 5);
@@ -261,9 +265,15 @@ public class MainActivity extends Activity {
         // Handle your other action bar items...
         switch (item.getItemId()) {
         case R.id.action_add_tab:
-            // TODO: remove
-            mListTitles.add("New Tab");
-            mDrawerListAdapter.notifyDataSetChanged();
+            if (!mTabManager.newTab()) {
+                if (mToast != null) {
+                    mToast.cancel();
+                }
+                mToast = Toast.makeText(this, R.string.error_max_tab_reached, Toast.LENGTH_SHORT);
+                mToast.show();
+            } else {
+                mDrawerListAdapter.notifyDataSetChanged();
+            }
 
             return true;
         case R.id.languages:
@@ -275,52 +285,13 @@ public class MainActivity extends Activity {
         }
     }
 
-    /**
-     * Test if there is available network to search on internet
-     * @return
-     */
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    /**
-     * Method to test if the string is valid or not.
-     * Test if its null, blank " " or ""
-     * @param term
-     * @return
-     */
-    private boolean verifyString(String term){
-
-        String aux = term.replaceAll("[^\\w]", "");
-
-        if(aux == null){
-            System.err.println("term is null");
-            return false;
-        }
-        if(aux.equals("")){
-            System.err.println("term is empty");
-            return false;
-        }
-
-        if(aux.equals("")){
-            System.err.println("term is just blanket spaces");
-            return false;
-        }
-        if(term.equals("@")){
-            System.err.println("term is just @");
-            return false;
-        }
-        if(term.equals("&")){
-            System.err.println("term is just &");
-            return false;
-        }
-        if(term.equals("\"\"")){
-            System.err.println("term is just \"\"");
-            return false;
-        }
-        return true;
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mContentFrame.removeView(mWebPage);
+        mWebPage = mTabManager.getTab(position);
+        mContentFrame.addView(mWebPage, 0);
+        setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
+        mDrawerLayout.closeDrawers();
     }
 
     private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
@@ -424,4 +395,5 @@ public class MainActivity extends Activity {
             mWebProgressBar.setVisibility(View.GONE);
         }
     }
+
 }

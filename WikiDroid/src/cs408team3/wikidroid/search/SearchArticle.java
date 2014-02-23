@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.Gravity;
 import android.webkit.WebView;
 import android.widget.Toast;
 import cs408team3.wikidroid.R;
@@ -20,6 +21,7 @@ public class SearchArticle extends AsyncTask<String, Integer, String> {
     public SearchArticle(Context context, WebView webPage) {
         this.context = context;
         search = new HttpClientSearch();
+        this.webPage = webPage;
     }
 
     @Override
@@ -53,8 +55,14 @@ public class SearchArticle extends AsyncTask<String, Integer, String> {
 
         ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
 
-        if (resultList == null)
+        Log.i(TAG, "List:  " + resultList);
+
+        if (resultList == null) {
             Log.e(TAG, "Error when converting string to a list");
+            Toast t = Toast.makeText(context, "Article not found", Toast.LENGTH_SHORT);
+            t.setGravity(Gravity.CENTER, 5, 5);
+            t.show();
+        }
         else {
             webPage.loadUrl(resultList.get(0).getLink());
         }

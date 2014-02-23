@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -68,29 +67,31 @@ public class MainActivity extends Activity {
     // Indicator for that web page has already been loaded at least once
     private boolean               mFirstPageLoaded        = false;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-        	requestWindowFeature(Window.FEATURE_PROGRESS);
-        	setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+        setContentView(R.layout.activity_main);
 
-        	mTitle = mDrawerTitle = getTitle();
-        	mWebPage = (WebView) findViewById(R.id.content_view);
-        	mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
-        	mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        	mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        	mBlurImage = (ImageView) findViewById(R.id.blur_image);
-        	mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
+        mTitle = mDrawerTitle = getTitle();
+        mWebPage = (WebView) findViewById(R.id.content_view);
+        mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mBlurImage = (ImageView) findViewById(R.id.blur_image);
+        mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
-     		mDrawerToggle = new WikiDroidActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+        mDrawerToggle = new WikiDroidActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
 
-        	// Set the drawer toggle as the DrawerListener
-        	mDrawerLayout.setDrawerListener(mDrawerToggle);
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        	// Setup mWebPage
-        	mWebPage.getSettings().setBuiltInZoomControls(true);
-        	mWebPage.getSettings().setDisplayZoomControls(false);
-       		mWebPage.setWebViewClient(new WebViewClient() {
+        // Setup mWebPage
+        mWebPage.getSettings().setBuiltInZoomControls(true);
+        // take off the zoom button, just use fingers to zoom in/out
+        mWebPage.getSettings().setDisplayZoomControls(false);
+        // this part is to handle new links on the same view.
+        mWebPage.setWebViewClient(new WebViewClient() {
 
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -218,16 +219,16 @@ public class MainActivity extends Activity {
                 boolean haveNet = Utils.isNetworkAvailable(getApplicationContext());
                 if (haveNet == false) {
                     Toast t = Toast.makeText(getApplicationContext(), "Sorry, No internet connection", Toast.LENGTH_SHORT);
-					t.setGravity(Gravity.CENTER, 5, 5);
-					t.show();                
-    			return false;
+                    t.setGravity(Gravity.CENTER, 5, 5);
+                    t.show();
+                    return false;
                 }
                 else {
                     if (!Utils.verifySearchString(query, TAG)) {
-                       Toast t = Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT);
-			t.setGravity(Gravity.CENTER, 5, 5);
-			t.show();
-			return false;
+                        Toast t = Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.CENTER, 5, 5);
+                        t.show();
+                        return false;
                     }
 
                     if (mSearchMenuItem != null) {
@@ -274,55 +275,55 @@ public class MainActivity extends Activity {
         }
     }
 
-	/**
-	 * Test if there is available network to search on internet
-	 * @return
-	 */
-	 private boolean isNetworkAvailable() {
-	        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-	        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-	        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	 }
-	 
-	 /**
-	     * Method to test if the string is valid or not.
-	     * Test if its null, blank " " or ""
-	     * @param term
-	     * @return 
-	     */
-	 private boolean verifyString(String term){
-		
-		 String aux = term.replaceAll("[^\\w]", "");
-		 
-	        if(aux == null){
-	            System.err.println("term is null");
-	            return false;
-	        }
-	        if(aux.equals("")){
-	            System.err.println("term is empty");
-	            return false;
-	        }
-	        String aux = term.replaceAll(" ", "");
-	        if(aux.equals("")){
-	            System.err.println("term is just blanket spaces");
-	            return false;
-	        }
-	        if(term.equals("@")){
-	        	System.err.println("term is just @");
-	            return false;
-	        }
-	        if(term.equals("&")){
-	        	System.err.println("term is just &");
-	            return false;
-	        }
-	        if(term.equals("\"\"")){
-	        	System.err.println("term is just \"\"");
-	            return false;
-	        }
-	        return true;
-	    }
-	
-	private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
+    /**
+     * Test if there is available network to search on internet
+     * @return
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    /**
+     * Method to test if the string is valid or not.
+     * Test if its null, blank " " or ""
+     * @param term
+     * @return
+     */
+    private boolean verifyString(String term){
+
+        String aux = term.replaceAll("[^\\w]", "");
+
+        if(aux == null){
+            System.err.println("term is null");
+            return false;
+        }
+        if(aux.equals("")){
+            System.err.println("term is empty");
+            return false;
+        }
+
+        if(aux.equals("")){
+            System.err.println("term is just blanket spaces");
+            return false;
+        }
+        if(term.equals("@")){
+            System.err.println("term is just @");
+            return false;
+        }
+        if(term.equals("&")){
+            System.err.println("term is just &");
+            return false;
+        }
+        if(term.equals("\"\"")){
+            System.err.println("term is just \"\"");
+            return false;
+        }
+        return true;
+    }
+
+    private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
 
         private Bitmap scaled;
 

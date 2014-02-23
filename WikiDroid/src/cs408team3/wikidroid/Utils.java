@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.view.View;
 
 public class Utils {
@@ -81,29 +80,31 @@ public class Utils {
      * @return
      */
     public static boolean verifySearchString(String term, String TAG) {
-        if (term == null) {
-            Log.w(TAG, "term is null");
+        String aux = term.replaceAll("[^\\w]", "");
+
+        if(aux == null){
+            System.err.println("term is null");
             return false;
         }
-        if (term.equals("")) {
-            Log.w(TAG, "term is empty");
+        if(aux.equals("")){
+            System.err.println("term is empty");
             return false;
         }
-        // String aux = term.replaceAll(" ", "");
-        if (term.equals("")) {
-            Log.w(TAG, "term is just blanket spaces");
+
+        if(aux.equals("")){
+            System.err.println("term is just blanket spaces");
             return false;
         }
-        if (term.equals("@")) {
-            Log.w(TAG, "term is just @");
+        if(term.equals("@")){
+            System.err.println("term is just @");
             return false;
         }
-        if (term.equals("&")) {
-            Log.w(TAG, "term is just &");
+        if(term.equals("&")){
+            System.err.println("term is just &");
             return false;
         }
-        if (term.equals("\"\"")) {
-            Log.w(TAG, "term is just \"\"");
+        if(term.equals("\"\"")){
+            System.err.println("term is just \"\"");
             return false;
         }
         return true;

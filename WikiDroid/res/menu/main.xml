@@ -14,13 +14,14 @@
         android:visible="false"/>
     
     <item
-        android:id="@+id/saveArticle"
-        android:title="@string/action_saveArticle"
-        android:showAsAction="never"/>
-    
-    <item
         android:id="@+id/languages"
         android:title="@string/action_languages"/>
+    
+    <item
+        android:id="@+id/saveArticle"
+        android:title="@string/action_SaveArticle"
+        android:showAsAction="never"/>
+    
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

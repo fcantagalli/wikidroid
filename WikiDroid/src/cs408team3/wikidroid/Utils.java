@@ -4,6 +4,7 @@
 package cs408team3.wikidroid;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.ConnectivityManager;
@@ -12,6 +13,7 @@ import android.view.View;
 
 public class Utils {
 
+    private static final String LINKS = "com.example.WikiDroid.LINKS";
     // public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width,
     // int height, int downSampling, Drawable drawable) {
     public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width, int height, int downSampling) {
@@ -112,6 +114,28 @@ public class Utils {
             return false;
         }
         return true;
+    }
+
+    public static void SaveLink(Context context, String name, String url) {
+        SharedPreferences shared = context.getSharedPreferences(LINKS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(name, url);
+        editor.commit();
+    }
+
+    public static void DeleteLink(Context context, String name) {
+        SharedPreferences shared = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.remove(name);
+        editor.commit();
+    }
+
+    public static String getSaveLink(Context context, String name) {
+        String url = null;
+
+        SharedPreferences sharedPref = context.getSharedPreferences(LINKS, Context.MODE_PRIVATE);
+        url = sharedPref.getString(name, null);
+        return url;
     }
 
 }

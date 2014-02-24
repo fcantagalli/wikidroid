@@ -12,6 +12,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import cs408team3.wikidroid.R;
 import cs408team3.wikidroid.Utils;
@@ -126,9 +127,43 @@ public class TabManager {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
             TextView text;
-
+            CheckBox favorite;
             if (convertView == null) {
                 view = mInflater.inflate(mResource, parent, false);
+                favorite = (CheckBox) view.findViewById(R.id.drawer_fav_link);
+                final int pos = position;
+                favorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        CheckBox fav = (CheckBox) v;
+                        if (fav.isChecked()) {
+
+                            if (getItem(pos).getTitle().equals("") == false) {
+                                Log.d("favLink", "is now checked");
+                                Log.d("favLink", "oioi" + getItem(pos).getTitle() + "kkk");
+                                // Utils.DeleteLink(v.getContext(),
+                                // getItem(pos).getTitle());
+                            }
+                            else {
+                                fav.setChecked(false);
+                            }
+
+                        }
+                        else {
+
+                            WebView w = getItem(pos);
+                            if (w.getTitle().equals("") == false && w.getUrl() != null) {
+                                Log.d("favLink", "is now unchecked");
+                                Log.d("favLink", "oioi " + w.getTitle());
+                                Log.d("favLink", w.getUrl());
+                                // Utils.SaveLink(v.getContext(), w.getTitle(),
+                                // w.getUrl());
+                            }
+
+                        }
+                    }
+                });
             } else {
                 view = convertView;
             }

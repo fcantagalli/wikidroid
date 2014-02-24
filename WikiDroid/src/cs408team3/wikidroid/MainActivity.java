@@ -62,6 +62,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private FrameLayout            mContentFrame;
     private WebView                mWebPage;
     private MenuItem               mSearchMenuItem;
+    private MenuItem               mSaveArticleMenuItem;
     private ProgressBar            mWebProgressBar;
     private Toast                  mToast;
 
@@ -258,6 +259,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 return false;
             }
         });
+        // add a button on menu to save the article
 
         return true;
     }
@@ -285,7 +287,13 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             return true;
         case R.id.languages:
             // TODO: ADD LANGUAGE CODE HERE
+            return true;
 
+        case R.id.saveArticle:
+            if (mTabManager.size() == 0)
+                return false; // possible future bug?. trying to save no page.
+            String title = mWebPage.getTitle();
+            saveArchive(mWebPage, title);
             return true;
         default:
             return super.onOptionsItemSelected(item);
@@ -302,7 +310,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     // load the page on a webView;
-    void loadWebPage(WebView webView, String fileName) {
+    void loadSavedWebPage(WebView webView, String fileName) {
         File sdCard = Environment.getExternalStorageDirectory();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {

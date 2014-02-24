@@ -22,5 +22,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="blur_image_description">Image for displaying blurred background</string>
+    
+    <!-- string for save article -->
+    <string name="action_SaveArticle">Save Article</string>
 
 </resources>

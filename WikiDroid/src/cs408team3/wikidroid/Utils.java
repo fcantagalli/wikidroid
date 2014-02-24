@@ -4,15 +4,16 @@
 package cs408team3.wikidroid;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.view.View;
 
 public class Utils {
 
+    private static final String LINKS = "com.example.WikiDroid.LINKS";
     // public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width,
     // int height, int downSampling, Drawable drawable) {
     public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width, int height, int downSampling) {
@@ -39,16 +40,27 @@ public class Utils {
      * Trim Wikipedia title.
      * 
      * For example, "Wikipedia - Wikipedia, the free encyclopedia" will be
-     * trimed to "Wikipedia".
+     * Trimmed to "Wikipedia".
      * 
      * @param title
      *            Original Wikipedia title.
-     * @return Trimed title.
+     * @return Trimmed title. Or the original title if trimming failed.
      */
     public static String trimWikipediaTitle(String title) {
-        String nTitle = new String(title.split(" - ")[0]);
+        if (title != null) {
+            String[] splittedTitle = title.split(" - ");
+            String nTitle;
 
-        return nTitle;
+            if (splittedTitle.length > 0) {
+                nTitle = new String(splittedTitle[0]);
+            } else {
+                nTitle = new String(title);
+            }
+
+            return nTitle;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -74,32 +86,56 @@ public class Utils {
      * @return
      */
     public static boolean verifySearchString(String term, String TAG) {
-        if (term == null) {
-            Log.w(TAG, "term is null");
+        String aux = term.replaceAll("[^\\w]", "");
+
+        if(aux == null){
+            System.err.println("term is null");
             return false;
         }
-        if (term.equals("")) {
-            Log.w(TAG, "term is empty");
+        if(aux.equals("")){
+            System.err.println("term is empty");
             return false;
         }
-        // String aux = term.replaceAll(" ", "");
-        if (term.equals("")) {
-            Log.w(TAG, "term is just blanket spaces");
+
+        if(aux.equals("")){
+            System.err.println("term is just blanket spaces");
             return false;
         }
-        if (term.equals("@")) {
-            Log.w(TAG, "term is just @");
+        if(term.equals("@")){
+            System.err.println("term is just @");
             return false;
         }
-        if (term.equals("&")) {
-            Log.w(TAG, "term is just &");
+        if(term.equals("&")){
+            System.err.println("term is just &");
             return false;
         }
-        if (term.equals("\"\"")) {
-            Log.w(TAG, "term is just \"\"");
+        if(term.equals("\"\"")){
+            System.err.println("term is just \"\"");
             return false;
         }
         return true;
+    }
+
+    public static void SaveLink(Context context, String name, String url) {
+        SharedPreferences shared = context.getSharedPreferences(LINKS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString(name, url);
+        editor.commit();
+    }
+
+    public static void DeleteLink(Context context, String name) {
+        SharedPreferences shared = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.remove(name);
+        editor.commit();
+    }
+
+    public static String getSaveLink(Context context, String name) {
+        String url = null;
+
+        SharedPreferences sharedPref = context.getSharedPreferences(LINKS, Context.MODE_PRIVATE);
+        url = sharedPref.getString(name, null);
+        return url;
     }
 
 }

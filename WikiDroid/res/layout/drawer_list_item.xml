@@ -4,16 +4,26 @@
     android:layout_height="match_parent"
     android:background="@drawable/drawer_list_item_bg"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/drawer_list_item_padding_top_bottom"
     android:paddingLeft="@dimen/drawer_list_item_padding_left_right"
     android:paddingRight="@dimen/drawer_list_item_padding_left_right"
-    android:paddingTop="@dimen/drawer_list_item_padding_top_bottom" >
+    android:paddingTop="@dimen/drawer_list_item_padding_top_bottom"
+    android:weightSum="100" >
 
     <TextView
         android:id="@+id/drawer_list_item_text"
-        android:layout_width="match_parent"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/drawer_text" />
+        android:textColor="@color/drawer_text"
+        android:layout_weight="95" />
+    
+    <CheckBox
+        android:id="@+id/drawer_fav_link"
+ 		android:layout_width="wrap_content"
+ 		android:layout_height="wrap_content"
+ 		android:layout_weight="5"
+ 		android:button="@android:drawable/btn_star" />
 
 </LinearLayout>

@@ -1,7 +1,8 @@
 package cs408team3.wikidroid;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -9,11 +10,12 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +24,7 @@ import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -30,41 +32,47 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
+
+import com.hyperionics.war_test.Lt;
+import com.hyperionics.war_test.WebArchiveReader;
+
 import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
-import cs408team3.wikidroid.search.HttpClientExample;
-import cs408team3.wikidroid.search.QueryContentHolder;
+import cs408team3.wikidroid.search.SearchArticle;
+import cs408team3.wikidroid.tab.TabManager;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
-    private static final String   TAG                     = "MainActivity";
+    private static final String    TAG                     = "MainActivity";
 
-    private static final int      ACTIONBAR_NORMAL_TITLE  = 0x1;
-    private static final int      ACTIONBAR_DRAWER_TITLE  = 0x2;
+    private static final int       ACTIONBAR_NORMAL_TITLE  = 0x1;
+    private static final int       ACTIONBAR_DRAWER_TITLE  = 0x2;
 
-    private static final String   STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
+    private static final String    STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
 
-    // TODO: remove
-    private List<String>          mListTitles             = new ArrayList<String>();
+    private TabManager             mTabManager;
+    private WebViewClient          mWebViewClient;
+    private WebChromeClient        mWebChromeClient;
 
-    private DrawerLayout          mDrawerLayout;
+    private DrawerLayout           mDrawerLayout;
 
-    // TODO: replace
-    private ArrayAdapter<String>  mDrawerListAdapter;
-    private ListView              mDrawerList;
-    private ImageView             mBlurImage;
-    private FrameLayout           mContentFrame;
-    private WebView               mWebPage;
-    private MenuItem              mSearchMenuItem;
-    private ProgressBar           mWebProgressBar;
+    private TabManager.ListAdapter mDrawerListAdapter;
+    private ListView               mDrawerList;
+    private ImageView              mBlurImage;
+    private FrameLayout            mContentFrame;
+    private WebView                mWebPage;
+    private MenuItem               mSearchMenuItem;
+    private MenuItem               mSaveArticleMenuItem;
+    private ProgressBar            mWebProgressBar;
+    private Toast                  mToast;
 
-    private ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle  mDrawerToggle;
 
-    private CharSequence          mDrawerTitle;
-    private CharSequence          mTitle;
+    private CharSequence           mDrawerTitle;
+    private CharSequence           mTitle;
 
     // Indicator for that web page has already been loaded at least once
-    private boolean               mFirstPageLoaded        = false;
+    private boolean                mFirstPageLoaded        = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,23 +80,7 @@ public class MainActivity extends Activity {
         requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
 
-        mTitle = mDrawerTitle = getTitle();
-        mWebPage = (WebView) findViewById(R.id.content_view);
-        mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mBlurImage = (ImageView) findViewById(R.id.blur_image);
-        mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
-
-        mDrawerToggle = new WikiDroidActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
-
-        // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        // Setup mWebPage
-        mWebPage.getSettings().setBuiltInZoomControls(true);
-        mWebPage.getSettings().setDisplayZoomControls(false);
-        mWebPage.setWebViewClient(new WebViewClient() {
+        mWebViewClient = new WebViewClient() {
 
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -99,10 +91,12 @@ public class MainActivity extends Activity {
                     mFirstPageLoaded = !mFirstPageLoaded;
                 }
 
-                setTitle(Utils.trimWikipediaTitle(view.getTitle()), ACTIONBAR_NORMAL_TITLE);
+                setTitle(mTabManager.getTitle(view), ACTIONBAR_NORMAL_TITLE);
+                // Refresh drawer list
+                mDrawerListAdapter.notifyDataSetChanged();
             }
-        });
-        mWebPage.setWebChromeClient(new WebChromeClient() {
+        };
+        mWebChromeClient = new WebChromeClient() {
 
             @Override
             public void onProgressChanged(WebView view, int progress) {
@@ -125,15 +119,37 @@ public class MainActivity extends Activity {
                     setProgress(progress * 100);
                 }
             }
-        });
+        };
 
-        // TODO: replace
+        mTabManager = new TabManager(this, mWebViewClient, mWebChromeClient);
+        if (mTabManager.size() == 0) {
+            mTabManager.newTab();
+        }
+
+        mDrawerTitle = getTitle();
+        mWebPage = mTabManager.getTab(0);
+        setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
+
+        mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mBlurImage = (ImageView) findViewById(R.id.blur_image);
+        mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
+
+        mContentFrame.addView(mWebPage, 0);
+
+        mDrawerToggle = new WikiDroidActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
         // Set the adapter for the list view
-        mDrawerListAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, R.id.drawer_list_item_text, mListTitles);
+        // TODO: Potential problem?
+        mDrawerListAdapter = mTabManager.new ListAdapter(this, R.layout.drawer_list_item, R.id.drawer_list_item_text);
         mDrawerList.setAdapter(mDrawerListAdapter);
 
         // Set the list's click listener
-        // mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemClickListener(this);
 
         // Disable Drawer Scrim Color
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
@@ -215,12 +231,15 @@ public class MainActivity extends Activity {
                 // Toast.LENGTH_LONG).show();
                 boolean haveNet = Utils.isNetworkAvailable(getApplicationContext());
                 if (haveNet == false) {
-                    Toast.makeText(getApplicationContext(), R.string.error_no_internet, Toast.LENGTH_SHORT).show();
+                    Toast t = Toast.makeText(getApplicationContext(), "Sorry, No internet connection", Toast.LENGTH_SHORT);
+                    t.setGravity(Gravity.CENTER, 5, 5);
+                    t.show();
                     return false;
-                }
-                else {
+                } else {
                     if (!Utils.verifySearchString(query, TAG)) {
-                        Toast.makeText(getApplicationContext(), R.string.error_invalid_input, Toast.LENGTH_SHORT).show();
+                        Toast t = Toast.makeText(getApplicationContext(), "Sorry, invalid input. Try again", Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.CENTER, 5, 5);
+                        t.show();
                         return false;
                     }
 
@@ -228,7 +247,7 @@ public class MainActivity extends Activity {
                         mSearchMenuItem.collapseActionView();
                     }
 
-                    SearchArticle search = new SearchArticle(getApplicationContext());
+                    SearchArticle search = new SearchArticle(getApplicationContext(), mWebPage);
                     search.execute(query);
 
                     return true;
@@ -240,6 +259,7 @@ public class MainActivity extends Activity {
                 return false;
             }
         });
+        // add a button on menu to save the article
 
         return true;
     }
@@ -254,24 +274,121 @@ public class MainActivity extends Activity {
         // Handle your other action bar items...
         switch (item.getItemId()) {
         case R.id.action_add_tab:
-            // TODO: remove
-            mListTitles.add("New Tab");
-            mDrawerListAdapter.notifyDataSetChanged();
+            if (!mTabManager.newTab()) {
+                if (mToast != null) {
+                    mToast.cancel();
+                }
+                mToast = Toast.makeText(this, R.string.error_max_tab_reached, Toast.LENGTH_SHORT);
+                mToast.show();
+            } else {
+                mDrawerListAdapter.notifyDataSetChanged();
+            }
 
             return true;
         case R.id.languages:
             // TODO: ADD LANGUAGE CODE HERE
+            return true;
 
+        case R.id.saveArticle:
+            if (mTabManager.size() == 0)
+                return false; // possible future bug?. trying to save no page.
+            String title = mWebPage.getTitle();
+            saveArchive(mWebPage, title);
             return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mContentFrame.removeView(mWebPage);
+        mWebPage = mTabManager.getTab(position);
+        mContentFrame.addView(mWebPage, 0);
+        setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
+        mDrawerLayout.closeDrawers();
+    }
+
+    // load the page on a webView;
+    void loadSavedWebPage(WebView webView, String fileName) {
+        File sdCard = Environment.getExternalStorageDirectory();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName + ".mht");
+            webView.loadUrl("file:///" + dir.toString());
+        }
+        else { // This part is for code below KITKAT, i didn't tested it yet.
+            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName + ".xml");
+            try {
+                // read the saved file.
+                FileInputStream is = new FileInputStream(dir);
+                WebArchiveReader wr = new WebArchiveReader() {
+
+                    @Override
+                    public void onFinished(WebView v) {
+                        // we are notified here when the page is fully loaded.
+                        continueWhenLoaded(v);
+                    }
+                };
+
+                if (wr.readWebArchive(is)) {
+                    wr.loadToWebView(webView);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    void continueWhenLoaded(WebView webView) {
+        Lt.d("Page from WebArchive fully loaded.");
+        // If you need to set your own WebViewClient, do it here,
+        // after the WebArchive was fully loaded:
+        webView.setWebViewClient(mWebViewClient = new WebViewClient() {
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                Log.i(TAG, "Page " + url + " loaded");
+
+                // Mark that we have already loaded at least one web page
+                if (!mFirstPageLoaded) {
+                    mFirstPageLoaded = !mFirstPageLoaded;
+                }
+
+                setTitle(mTabManager.getTitle(view), ACTIONBAR_NORMAL_TITLE);
+                // Refresh drawer list
+                mDrawerListAdapter.notifyDataSetChanged();
+            }
+        });
+        // Any other code we need to execute after loading a page from a
+        // WebArchive...
+    }
+
+    // This method save the file on the sd card, inside the folder /WikiDroid
+    public void saveArchive(WebView webpage, String fileName) {
+        try {
+            File sdCard = Environment.getExternalStorageDirectory();
+            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                webpage.saveWebArchive(dir.toString() + "/" + fileName + ".mht");
+            }
+            else {
+                webpage.saveWebArchive(dir.toString() + "/" + fileName + ".xml");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : e.toString());
+        }
+
+    }
+
     private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
 
-        private Bitmap   scaled;
-        private BlurTask blurTask;
+        private Bitmap scaled;
+
+        // private BlurTask blurTask;
 
         public WikiDroidActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
             super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
@@ -317,7 +434,9 @@ public class MainActivity extends Activity {
             mBlurImage.setVisibility(View.VISIBLE);
 
             scaled = Utils.drawViewToBitmap(scaled, mContentFrame, mContentFrame.getWidth(), mContentFrame.getHeight(), Blur.DEFAULT_DOWNSAMPLING);
-            blurTask = new BlurTask(mContentFrame.getContext(), null, scaled);
+            // blurTask = new BlurTask(mContentFrame.getContext(), null,
+            // scaled);
+            new BlurTask(mContentFrame.getContext(), null, scaled);
 
             mBlurImage.setImageBitmap(scaled);
             Log.v(TAG, "BlurImage set");
@@ -326,7 +445,7 @@ public class MainActivity extends Activity {
         private void clearBlurImage() {
             mBlurImage.setVisibility(View.GONE);
             mBlurImage.setImageBitmap(null);
-            blurTask = null;
+            // blurTask = null;
         }
 
         @Override
@@ -334,58 +453,6 @@ public class MainActivity extends Activity {
             mBlurImage.invalidate();
         }
 
-    }
-
-    private class SearchArticle extends AsyncTask<String, Integer, String> {
-
-        Context           context;
-        HttpClientExample search;
-
-        public SearchArticle(Context context) {
-            this.context = context;
-            search = new HttpClientExample();
-            // TODO Auto-generated constructor stub
-        }
-
-        @Override
-        protected String doInBackground(String... query) {
-
-            String result = search.searchGoogle(query[0]);
-
-            publishProgress(50);
-
-            return result;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            // setProgressPercent(progress[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result == null) {
-                Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else if (result.equals("wrong url")) {
-                Toast.makeText(context, R.string.error_internal, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            else if (result.equals("IOException")) {
-                Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            ArrayList<QueryContentHolder> resultList = search.JSONToArray(result);
-
-            if (resultList == null)
-                Log.e("search", "Error when converting string to a list");
-            else {
-                mWebPage.loadUrl(resultList.get(0).getLink());
-            }
-
-        }
     }
 
     private void setTitle(String title, int status) {
@@ -418,4 +485,5 @@ public class MainActivity extends Activity {
             mWebProgressBar.setVisibility(View.GONE);
         }
     }
+
 }

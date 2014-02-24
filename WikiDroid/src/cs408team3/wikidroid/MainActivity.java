@@ -3,13 +3,17 @@ package cs408team3.wikidroid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -38,6 +42,7 @@ import com.hyperionics.war_test.WebArchiveReader;
 
 import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
+import cs408team3.wikidroid.languages.Languages;
 import cs408team3.wikidroid.search.SearchArticle;
 import cs408team3.wikidroid.tab.TabManager;
 
@@ -47,6 +52,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     private static final int       ACTIONBAR_NORMAL_TITLE  = 0x1;
     private static final int       ACTIONBAR_DRAWER_TITLE  = 0x2;
+    private static final int      LANG_DIALOG             = 100;
+
+    private String[]              languageOptions         = new String[100];
+    private String[]               languageURLs            = new String[100];
 
     private static final String    STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
 
@@ -286,7 +295,38 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
             return true;
         case R.id.languages:
-            // TODO: ADD LANGUAGE CODE HERE
+            // Show dialog
+
+
+            LanguageList langList = new LanguageList();
+            langList.execute();
+
+            UrlList urlList = new UrlList();
+            urlList.execute();
+
+            /*
+                Languages langs = new Languages();
+             */
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            //String[] languageOptions = (String[]) langs.getLanguageNames(langs.getAvailableLanguages()).toArray();
+            builder.setTitle(R.string.action_languages)
+            // Specify the list array, the items to be selected by default (null for none),
+            // and the listener through which to receive callbacks when items are selected
+            .setSingleChoiceItems(languageOptions, -1, null)
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    dialog.dismiss();
+                    int selectedPosition = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+                    // Do something useful with the position of the selected radio button
+
+                }
+            });
+            builder.create().show();
+
+            // Set the dialog title
             return true;
 
         case R.id.saveArticle:
@@ -453,6 +493,58 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             mBlurImage.invalidate();
         }
 
+    }
+
+    private class LanguageList extends AsyncTask<String, Integer, String[]> {
+
+        Languages languages;
+
+        public LanguageList() {
+            languages = new Languages();
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        protected String[] doInBackground(String... url) {
+            ArrayList<String> available = languages.getAvailableLanguages();
+            ArrayList<String> names = languages.getLanguageNames(available);
+            CharSequence[] availableLangs = languages.convertArrayListToCharSequence(names);
+            publishProgress(50);
+            return (String[]) availableLangs;
+            // return new String[100];
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            // setProgressPercent(progress[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            // languageOptions = (String[]) availableLangs;
+            languageOptions = result;
+        }
+    }
+
+    private class UrlList extends AsyncTask<String, Integer, String[]> {
+
+        Languages languages;
+
+        public UrlList() {
+            languages = new Languages();
+        }
+
+        @Override
+        protected String[] doInBackground(String... url) {
+            ArrayList<String> urlList = languages.getLanguageURLs();
+
+            return urlList.toArray(new String[urlList.size()]);
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            languageURLs = result;
+        }
     }
 
     private void setTitle(String title, int status) {

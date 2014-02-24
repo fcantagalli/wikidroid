@@ -10,7 +10,7 @@ import android.webkit.WebView;
 import android.widget.Toast;
 import cs408team3.wikidroid.R;
 
-public class SearchArticle extends AsyncTask<String, Integer, String> {
+public class SearchArticle extends AsyncTask<String, Void, String> {
 
     private static final String TAG = "SearchArticle";
 
@@ -27,15 +27,9 @@ public class SearchArticle extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... query) {
         String result = httpClient.searchGoogle(query[0]);
-
-        publishProgress(50);
+        httpClient.close();
 
         return result;
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... progress) {
-        // setProgressPercent(progress[0]);
     }
 
     @Override
@@ -43,30 +37,27 @@ public class SearchArticle extends AsyncTask<String, Integer, String> {
         if (result == null) {
             Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
             return;
-        }
-        else if (result.equals("wrong url")) {
+        } else if (result.equals("wrong url")) {
             Toast.makeText(context, R.string.error_internal, Toast.LENGTH_SHORT).show();
             return;
-        }
-        else if (result.equals("IOException")) {
+        } else if (result.equals("IOException")) {
             Toast.makeText(context, R.string.error_connection, Toast.LENGTH_SHORT).show();
             return;
         }
 
         ArrayList<QueryContentHolder> resultList = httpClient.JSONToArray(result);
 
-        Log.i(TAG, "List:  " + resultList);
+        Log.v(TAG, "List:  " + resultList);
 
         if (resultList == null) {
             Log.e(TAG, "Error when converting string to a list");
+
             Toast t = Toast.makeText(context, "Article not found", Toast.LENGTH_SHORT);
             t.setGravity(Gravity.CENTER, 5, 5);
             t.show();
-        }
-        else {
+        } else {
             webPage.loadUrl(resultList.get(0).getLink());
         }
-
     }
 
 }

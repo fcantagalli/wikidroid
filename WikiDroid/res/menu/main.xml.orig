@@ -19,7 +19,11 @@
     
     <item
         android:id="@+id/saveArticle"
-        android:title="@string/action_saveArticle"
+<<<<<<< HEAD
+        android:title="@string/action_SaveArticle"
+=======
+        android:title="@string/action_save_article"
+>>>>>>> 880816c5579e01dd32bca374377f1962504b4867
         android:showAsAction="never"/>
     
     <item

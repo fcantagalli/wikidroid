@@ -10,8 +10,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.http.client.methods.HttpPost;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -63,8 +62,7 @@ public class Languages {
          */
 
         // Match language codes to language names
-        Object parsed = JSONValue.parse(JSONLanguages);
-        JSONObject JSONLangCodes = (JSONObject) parsed;
+        JSONObject JSONLangCodes = new JSONObject(JSONLanguages);
 
         ArrayList<String> namesFound = new ArrayList<String>();
 

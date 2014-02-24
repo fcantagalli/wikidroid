@@ -379,7 +379,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 webpage.saveWebArchive(dir.toString() + "/" + fileName + ".xml");
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : e.toString());
         }
 
     }

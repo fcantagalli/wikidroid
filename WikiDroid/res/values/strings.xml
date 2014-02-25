@@ -6,11 +6,13 @@
     <string name="action_add_tab">Add tab</string>
     <string name="action_languages">Languages</string>
     <string name="default_tab_title">New tab</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_language_empty">No languages available</string>
 
     <!-- those string are for the action bar search field -->
     <string name="search_title">Search</string>
     <string name="search_hint">Word to Search</string>
-    
+
     <!-- strings of error -->
     <string name="error_no_internet">No internet connection</string>
     <string name="error_invalid_input">Invalid input</string>
@@ -22,7 +24,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="blur_image_description">Image for displaying blurred background</string>
-    
+
     <!-- string for save article -->
     <string name="action_saveArticle">Save Article</string>
 

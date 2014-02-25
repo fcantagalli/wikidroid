@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
  * Example query call:
  * http://en.wikipedia.org/w/api.php?action=query&titles=association%20football&prop
  * =langlinks&lllimit=500&llurl=true
- * 
+ *
  * titles --> what you're looking for
  * prop=langlinks --> returns different language info
  * lllimit --> langlinks limit; how many to find
@@ -38,26 +38,26 @@ public class Languages {
      * public static void main(String[] args) throws Exception {
      * Languages langs = new Languages();
      * String currentLanguage = langs.findCurrentLanguage();
-     * 
+     *
      * /*
      * String uri = "http://" + currentLanguage +
      * ".wikipedia.org/w/api.php?action=query&format=xml&titles=" +
      * langs.getQuery() + "&prop=langlinks&lllimit=500&llurl=true";
      * HttpPost httppost = new HttpPost(uri);
-     * 
+     *
      * //Parse the XML at the languages
      * DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
      * DocumentBuilder builder = factory.newDocumentBuilder();
      * Document doc = builder.parse(httppost.getURI().toString());
      * XPathFactory xpf = XPathFactory.newInstance();
      * XPath xpath = xpf.newXPath();
-     * 
+     *
      * //Get names of languages and URLs for each
      * ArrayList<String> availableLanguages = langs.getAvailableLanguages();
      * ArrayList<String> languageNames =
      * langs.getLanguageNames(availableLanguages);
      * ArrayList<String> URLs = langs.getLanguageURLs();
-     * 
+     *
      * //Value checks
      * for (int i = 0; i < availableLanguages.size(); i++) {
      * System.out.println(availableLanguages.get(i) + "--" +
@@ -111,7 +111,10 @@ public class Languages {
             System.err.println(e);
         }
         System.err.println("wtf happened");
-        return null;
+
+        // FIXME: fix code above
+        // return null;
+        return new ArrayList<String>();
     }
 
     public CharSequence[] convertArrayListToCharSequence(ArrayList<String> list) {

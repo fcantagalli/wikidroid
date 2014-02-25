@@ -52,9 +52,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     private static final int       ACTIONBAR_NORMAL_TITLE  = 0x1;
     private static final int       ACTIONBAR_DRAWER_TITLE  = 0x2;
-    private static final int      LANG_DIALOG             = 100;
+    private static final int       LANG_DIALOG             = 100;
 
-    private String[]              languageOptions         = new String[100];
+    private String[]               languageOptions         = new String[100];
     private String[]               languageURLs            = new String[100];
 
     private static final String    STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
@@ -297,7 +297,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         case R.id.languages:
             // Show dialog
 
-
             LanguageList langList = new LanguageList();
             langList.execute();
 
@@ -305,22 +304,27 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             urlList.execute();
 
             /*
-                Languages langs = new Languages();
+             * Languages langs = new Languages();
              */
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            //String[] languageOptions = (String[]) langs.getLanguageNames(langs.getAvailableLanguages()).toArray();
+            // String[] languageOptions = (String[])
+            // langs.getLanguageNames(langs.getAvailableLanguages()).toArray();
             builder.setTitle(R.string.action_languages)
-            // Specify the list array, the items to be selected by default (null for none),
-            // and the listener through which to receive callbacks when items are selected
+            // Specify the list array, the items to be selected by
+            // default (null for none),
+            // and the listener through which to receive callbacks when
+            // items are selected
             .setSingleChoiceItems(languageOptions, -1, null)
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
                 @Override
                 public void onClick(DialogInterface dialog, int whichButton) {
                     dialog.dismiss();
-                    int selectedPosition = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
-                    // Do something useful with the position of the selected radio button
+                    int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                    // Do something useful with the position of the
+                    // selected radio button
 
                 }
             });

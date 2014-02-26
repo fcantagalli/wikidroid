@@ -5,7 +5,10 @@
     <string name="action_settings">Settings</string>
     <string name="action_add_tab">Add tab</string>
     <string name="action_languages">Languages</string>
-    <string name="action_save_article">Save article</string>
+<<<<<<< HEAD
+
+=======
+>>>>>>> bd9da0d00a27ab82ab0fa9790f8c8bd428fcdc67
     <string name="default_tab_title">New tab</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_language_empty">No languages available</string>
@@ -27,6 +30,10 @@
     <string name="blur_image_description">Image for displaying blurred background</string>
 
     <!-- string for save article -->
-    <string name="action_SaveArticle">Save Article</string>
+<<<<<<< HEAD
+    <string name="action_save_article">Save Article</string>
+=======
+    <string name="action_saveArticle">Save Article</string>
+>>>>>>> bd9da0d00a27ab82ab0fa9790f8c8bd428fcdc67
 
 </resources>

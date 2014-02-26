@@ -24,6 +24,12 @@
  		android:layout_width="wrap_content"
  		android:layout_height="wrap_content"
  		android:layout_weight="5"
- 		android:button="@android:drawable/btn_star"/>
+ 		android:button="@android:drawable/btn_star" />
+    
+    <ImageButton
+        android:id="@+id/drawer_remove_tab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawable="@null" />
 
 </LinearLayout>

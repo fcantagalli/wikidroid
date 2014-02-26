@@ -19,7 +19,7 @@
     
     <item
         android:id="@+id/saveArticle"
-        android:title="@string/action_saveArticle"
+        android:title="@string/action_save_article"
         android:showAsAction="never"/>
     
     <item

@@ -28,5 +28,7 @@
 
     <!-- string for save article -->
     <string name="action_SaveArticle">Save Article</string>
+    <string name="title_activity_list_save_links">ListSaveLinks</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

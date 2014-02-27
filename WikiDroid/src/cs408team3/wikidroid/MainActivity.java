@@ -308,7 +308,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             if (mTabManager.size() == 0)
                 return false; // possible future bug?. trying to save no page.
             String title = mWebPage.getTitle();
-            saveArchive(mWebPage, title);
+            Utils.saveArchive(mWebPage, title);
+            Toast t = Toast.makeText(this, "Article Saved", Toast.LENGTH_LONG);
+            t.setGravity(Gravity.CENTER, 5, 5);
+            t.show();
             return true;
         default:
             return super.onOptionsItemSelected(item);
@@ -415,26 +418,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         });
         // Any other code we need to execute after loading a page from a
         // WebArchive...
-    }
-
-    // This method save the file on the sd card, inside the folder /WikiDroid
-    private void saveArchive(WebView webpage, String fileName) {
-        try {
-            File sdCard = Environment.getExternalStorageDirectory();
-            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/");
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                webpage.saveWebArchive(dir.toString() + "/" + fileName + ".mht");
-            }
-            else {
-                webpage.saveWebArchive(dir.toString() + "/" + fileName + ".xml");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage() != null ? e.getMessage() : e.toString());
-        }
-
     }
 
     private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {

@@ -3,17 +3,23 @@
 
 package cs408team3.wikidroid;
 
+import java.io.File;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 
 public class Utils {
 
-    private static final String LINKS = "com.example.WikiDroid.LINKS";
+    static final String LINKS = "com.example.WikiDroid.LINKS";
+    private static final String TAG   = "wikiDroid";
     // public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width,
     // int height, int downSampling, Drawable drawable) {
     public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width, int height, int downSampling) {
@@ -38,10 +44,10 @@ public class Utils {
 
     /**
      * Trim Wikipedia title.
-     * 
+     *
      * For example, "Wikipedia - Wikipedia, the free encyclopedia" will be
      * Trimmed to "Wikipedia".
-     * 
+     *
      * @param title
      *            Original Wikipedia title.
      * @return Trimmed title. Or the original title if trimming failed.
@@ -65,7 +71,7 @@ public class Utils {
 
     /**
      * Test if there is available network to search on internet
-     * 
+     *
      * @return
      */
     public static boolean isNetworkAvailable(Context context) {
@@ -78,7 +84,7 @@ public class Utils {
     /**
      * Method to test if the search term String is valid or not.
      * Test if its null, blank " " or "".
-     * 
+     *
      * @param term
      *            Search term String.
      * @param TAG
@@ -136,6 +142,26 @@ public class Utils {
         SharedPreferences sharedPref = context.getSharedPreferences(LINKS, Context.MODE_PRIVATE);
         url = sharedPref.getString(name, null);
         return url;
+    }
+
+    // This method save the file on the sd card, inside the folder /WikiDroid
+    public static void saveArchive(WebView webpage, String fileName) {
+        try {
+            File sdCard = Environment.getExternalStorageDirectory();
+            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                webpage.saveWebArchive(dir.toString() + "/" + fileName + ".mht");
+            }
+            else {
+                webpage.saveWebArchive(dir.toString() + "/" + fileName + ".xml");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : e.toString());
+        }
+
     }
 
 }

@@ -29,5 +29,7 @@
     <!-- string for save article -->
     <string name="title_activity_list_save_links">ListSaveLinks</string>
     <string name="hello_world">Hello world!</string>
+    
+    <string name="dialog_language_loading">Loading available languages&#8230;</string>
 
 </resources>

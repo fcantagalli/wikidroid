@@ -331,7 +331,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         // UrlList urlList = new UrlList(mLanguages);
         // urlList.execute();
 
-        LanguageList langList = new LanguageList(mLanguages, new LanguageList.Listener() {
+        LanguageList langList = new LanguageList(mLanguages, mWebPage.getUrl(), new LanguageList.Listener() {
 
             @Override
             public void onResponse(List<String> languageOptions) {
@@ -348,9 +348,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     dialog.dismiss();
                                     int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                    // Do something useful with the position of
-                                    // the
-                                    // selected radio button
+                                    // With position we can find the proper URL
+
                                     Log.i(TAG, "Selected language dialog index " + selectedPosition);
                                 }
                             });

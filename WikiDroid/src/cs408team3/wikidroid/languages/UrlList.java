@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 public class UrlList extends AsyncTask<Void, Void, String[]> {
 
     private Languages languages;
+    private String    url;
 
     public UrlList(Languages languages) {
         this.languages = languages;
@@ -14,7 +15,7 @@ public class UrlList extends AsyncTask<Void, Void, String[]> {
 
     @Override
     protected String[] doInBackground(Void... params) {
-        ArrayList<String> urlList = languages.getLanguageURLs();
+        ArrayList<String> urlList = languages.getLanguageURLs(url);
 
         return urlList.toArray(new String[urlList.size()]);
     }

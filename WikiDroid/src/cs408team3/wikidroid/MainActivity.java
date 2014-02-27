@@ -224,6 +224,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         menu.findItem(R.id.action_add_tab).setVisible(drawerOpen);
         // Hide search
         menu.findItem(R.id.search).setVisible(!drawerOpen);
+        // Hide save article
+        menu.findItem(R.id.saveArticle).setVisible(!drawerOpen);
+        // Hide languages
+        menu.findItem(R.id.languages).setVisible(!drawerOpen);
 
         return super.onPrepareOptionsMenu(menu);
     }

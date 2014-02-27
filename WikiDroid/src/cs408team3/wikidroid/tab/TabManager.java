@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import cs408team3.wikidroid.R;
 import cs408team3.wikidroid.Utils;
@@ -70,7 +71,7 @@ public class TabManager {
         return mTabs.get(index);
     }
 
-    public boolean removeTab(int index) {
+    private boolean removeTab(int index) {
         return mTabs.remove(index) != null;
     }
 
@@ -124,49 +125,59 @@ public class TabManager {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             View view;
             TextView text;
-            CheckBox favorite;
+
             if (convertView == null) {
                 view = mInflater.inflate(mResource, parent, false);
-                favorite = (CheckBox) view.findViewById(R.id.drawer_fav_link);
-                final int pos = position;
-                favorite.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        CheckBox fav = (CheckBox) v;
-                        if (fav.isChecked()) {
 
-                            if (getItem(pos).getTitle().equals("") == false) {
-                                Log.d("favLink", "is now checked");
-                                Log.d("favLink", "oioi" + getItem(pos).getTitle() + "kkk");
-                                // Utils.DeleteLink(v.getContext(),
-                                // getItem(pos).getTitle());
-                            }
-                            else {
-                                fav.setChecked(false);
-                            }
-
-                        }
-                        else {
-
-                            WebView w = getItem(pos);
-                            if (w.getTitle().equals("") == false && w.getUrl() != null) {
-                                Log.d("favLink", "is now unchecked");
-                                Log.d("favLink", "oioi " + w.getTitle());
-                                Log.d("favLink", w.getUrl());
-                                // Utils.SaveLink(v.getContext(), w.getTitle(),
-                                // w.getUrl());
-                            }
-
-                        }
-                    }
-                });
             } else {
                 view = convertView;
             }
+
+            CheckBox favorite = (CheckBox)
+                    view.findViewById(R.id.drawer_fav_link);
+            ImageButton removeTab = (ImageButton)
+                    view.findViewById(R.id.drawer_remove_tab);
+
+            favorite.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    CheckBox fav = (CheckBox) v;
+                    if (fav.isChecked()) {
+                        if (getItem(position).getTitle().equals("") == false) {
+                            Log.d("favLink", "is now checked");
+                            Log.d("favLink", "oioi" + getItem(position).getTitle() + "kkk");
+                            // Utils.DeleteLink(v.getContext(),
+                            // getItem(pos).getTitle());
+                        } else {
+                            fav.setChecked(false);
+                        }
+                    } else {
+                        WebView w = getItem(position);
+                        if (w.getTitle().equals("") == false && w.getUrl() != null) {
+                            Log.d("favLink", "is now unchecked");
+                            Log.d("favLink", "oioi " + w.getTitle());
+                            Log.d("favLink", w.getUrl());
+                            // Utils.SaveLink(v.getContext(), w.getTitle(),
+                            // w.getUrl());
+                        }
+
+                    }
+                }
+
+            });
+            removeTab.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    removeTab(position);
+                    notifyDataSetChanged();
+                }
+
+            });
 
             try {
                 text = (TextView) view.findViewById(mFieldId);

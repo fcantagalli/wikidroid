@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/drawer_list_item_bg"
+    android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/drawer_list_item_padding_top_bottom"
@@ -29,8 +30,8 @@
         android:id="@+id/drawer_remove_tab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@null"
         android:contentDescription="@string/remove_button_description"
-        android:src="@drawable/ic_action_remove"
-        android:background="@null" />
+        android:src="@drawable/ic_action_remove" />
 
 </LinearLayout>

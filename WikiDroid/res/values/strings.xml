@@ -25,7 +25,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="blur_image_description">Image for displaying blurred background</string>
-
+	<string name="remove_button_description">Remove current tab</string>
+    
     <!-- string for save article -->
     <string name="title_activity_list_save_links">ListSaveLinks</string>
     <string name="hello_world">Hello world!</string>

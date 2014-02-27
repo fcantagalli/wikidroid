@@ -46,7 +46,7 @@ public class TabManager {
         WebView webView = new WebView(mContext);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
-        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(false);
         webView.setWebViewClient(mWebViewClient);
         webView.setWebChromeClient(mWebChromeClient);
 

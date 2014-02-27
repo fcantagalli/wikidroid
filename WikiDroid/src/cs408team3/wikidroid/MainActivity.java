@@ -45,6 +45,7 @@ import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
 import cs408team3.wikidroid.languages.LanguageList;
 import cs408team3.wikidroid.languages.Languages;
+import cs408team3.wikidroid.languages.UrlList;
 import cs408team3.wikidroid.search.SearchArticle;
 import cs408team3.wikidroid.tab.TabManager;
 
@@ -54,9 +55,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     private static final int       ACTIONBAR_NORMAL_TITLE  = 0x1;
     private static final int       ACTIONBAR_DRAWER_TITLE  = 0x2;
-
-    // private String[] languageOptions = new String[100];
-    // private String[] languageURLs = new String[100];
 
     private static final String    STATE_FIRST_PAGE_LOADED = "mFirstPageLoaded";
 
@@ -347,9 +345,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                                 @Override
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     dialog.dismiss();
-                                    int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-                                    // With position we can find the proper URL
-
+                                    final int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                                    // Use position to find the proper URL
+                                    UrlList urlList = new UrlList(mLanguages, mWebPage.getUrl(), new UrlList.Listener() {
+                                      @Override
+                                      public void onResponse(List<String> urlOptions) {
+                                            mWebPage.loadUrl(urlOptions.get(selectedPosition));
+                                      }
+                                    });
+                                    urlList.execute();
                                     Log.i(TAG, "Selected language dialog index " + selectedPosition);
                                 }
                             });

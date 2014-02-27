@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/remove_button_description"
-        android:src="@drawable/ic_action_cancel"
+        android:src="@drawable/ic_action_remove"
         android:background="@null" />
 
 </LinearLayout>

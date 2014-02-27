@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -221,6 +222,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         menu.findItem(R.id.action_add_tab).setVisible(drawerOpen);
         // Hide search
         menu.findItem(R.id.search).setVisible(!drawerOpen);
+        // Hide save article
+        menu.findItem(R.id.saveArticle).setVisible(!drawerOpen);
+        // Hide languages
+        menu.findItem(R.id.languages).setVisible(!drawerOpen);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -328,6 +333,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private void showLanguagesDialog() {
         // UrlList urlList = new UrlList(mLanguages);
         // urlList.execute();
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage(getString(R.string.dialog_language_loading));
+        progressDialog.show();
 
         LanguageList langList = new LanguageList(mLanguages, mWebPage.getUrl(), new LanguageList.Listener() {
 
@@ -362,6 +370,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                     builder.setNeutralButton(R.string.dialog_ok, null);
                 }
 
+                progressDialog.dismiss();
                 builder.create().show();
             }
         });

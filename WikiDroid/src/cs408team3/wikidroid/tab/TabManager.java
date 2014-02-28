@@ -147,7 +147,7 @@ public class TabManager {
                 public void onClick(View v) {
                     CheckBox fav = (CheckBox) v;
                     if (fav.isChecked()) {
-                        if (getItem(position).getTitle().equals("") == false) {
+                        if (getItem(position).getTitle() != null) {
                             Log.d("favLink", "is now checked");
                             Log.d("favLink", "oioi" + getItem(position).getTitle() + "kkk");
                             // Utils.DeleteLink(v.getContext(),
@@ -157,7 +157,7 @@ public class TabManager {
                         }
                     } else {
                         WebView w = getItem(position);
-                        if (w.getTitle().equals("") == false && w.getUrl() != null) {
+                        if (w.getTitle() != null && w.getUrl() != null) {
                             Log.d("favLink", "is now unchecked");
                             Log.d("favLink", "oioi " + w.getTitle());
                             Log.d("favLink", w.getUrl());

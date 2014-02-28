@@ -306,8 +306,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     private void showLanguagesDialog() {
-        // UrlList urlList = new UrlList(mLanguages);
-        // urlList.execute();
         final ProgressDialog progressDialog = new ProgressDialog(mContext);
         progressDialog.setMessage(getString(R.string.dialog_language_loading));
         progressDialog.show();
@@ -329,14 +327,23 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     dialog.dismiss();
                                     final int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+
+                                    // getCheckedItemPosition will return -1 if
+                                    // no selection made
+                                    if (selectedPosition == -1) {
+                                        // Do nothing
+                                    }
                                     // Use position to find the proper URL
-                                    UrlList urlList = new UrlList(mLanguages, mWebPage.getUrl(), new UrlList.Listener() {
-                                      @Override
-                                      public void onResponse(List<String> urlOptions) {
-                                            mWebPage.loadUrl(urlOptions.get(selectedPosition));
-                                      }
-                                    });
-                                    urlList.execute();
+                                    else {
+                                        UrlList urlList = new UrlList(mLanguages, mWebPage.getUrl(), new UrlList.Listener() {
+
+                                            @Override
+                                            public void onResponse(List<String> urlOptions) {
+                                                mWebPage.loadUrl(urlOptions.get(selectedPosition));
+                                            }
+                                        });
+                                        urlList.execute();
+                                    }
                                     Log.i(TAG, "Selected language dialog index " + selectedPosition);
                                 }
                             });

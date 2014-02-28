@@ -20,6 +20,7 @@
     <string name="error_connection">Connection error</string>
     <string name="error_internal">Internal error</string>
     <string name="error_max_tab_reached">Max tab size reached</string>
+    <string name="error_article_not_found">Article not found</string>
 
     <!-- strings for sccessibility -->
     <string name="drawer_open">Open navigation drawer</string>

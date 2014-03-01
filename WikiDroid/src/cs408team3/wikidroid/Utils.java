@@ -18,7 +18,7 @@ import android.webkit.WebView;
 
 public class Utils {
 
-    static final String LINKS = "com.example.WikiDroid.LINKS";
+    public static final String  LINKS = "com.example.WikiDroid.LINKS";
     private static final String TAG   = "wikiDroid";
     // public static Bitmap drawViewToBitmap(Bitmap dest, View view, int width,
     // int height, int downSampling, Drawable drawable) {
@@ -122,6 +122,15 @@ public class Utils {
         return true;
     }
 
+    /**
+     * Save the link of an article to the SharedPreference.
+     *
+     * @param context
+     * @param name
+     *            - name of the article not trim
+     * @param url
+     *            - link of the article
+     */
     public static void SaveLink(Context context, String name, String url) {
         SharedPreferences shared = context.getSharedPreferences(LINKS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
@@ -129,6 +138,13 @@ public class Utils {
         editor.commit();
     }
 
+    /**
+     * Delete a saved link from the sharedPreferences.
+     *
+     * @param context
+     * @param name
+     *            - name of the article not trim
+     */
     public static void DeleteLink(Context context, String name) {
         SharedPreferences shared = context.getSharedPreferences(name, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
@@ -136,6 +152,14 @@ public class Utils {
         editor.commit();
     }
 
+    /**
+     * Return the link of an saved article on the shared preferences
+     *
+     * @param context
+     * @param name
+     *            - name of the article not trim
+     * @return
+     */
     public static String getSaveLink(Context context, String name) {
         String url = null;
 
@@ -144,7 +168,15 @@ public class Utils {
         return url;
     }
 
-    // This method save the file on the sd card, inside the folder /WikiDroid
+
+    /**
+     * This method save the file on the sd card, inside the folder /WikiDroid.
+     *
+     * @param webpage
+     *            - WebView object where the page is loaded.
+     * @param fileName
+     *            - name of the file that will be created.
+     */
     public static void saveArchive(WebView webpage, String fileName) {
         try {
             File sdCard = Environment.getExternalStorageDirectory();

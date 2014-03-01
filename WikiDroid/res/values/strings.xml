@@ -28,6 +28,9 @@
 
     <!-- string for save article -->
     <string name="title_activity_list_save_links">ListSaveLinks</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_load_saved_stuffs">LoadSavedStuffs</string>
+    
+    <!-- string for share article -->
+    <string name="action_share_article">Share Article</string>
 
 </resources>

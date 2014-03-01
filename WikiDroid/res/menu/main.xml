@@ -13,6 +13,12 @@
         android:title="@string/action_add_tab"
         android:visible="false"/>
     
+    <item 
+        android:id="@+id/action_share_article"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/action_share_article"/>
+
     <item
         android:id="@+id/languages"
         android:title="@string/action_languages"/>

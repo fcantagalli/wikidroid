@@ -201,6 +201,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         menu.findItem(R.id.saveArticle).setVisible(!drawerOpen);
         // Hide languages
         menu.findItem(R.id.languages).setVisible(!drawerOpen);
+        // Hide share
+        menu.findItem(R.id.action_share_article).setVisible(!drawerOpen);
 
         return super.onPrepareOptionsMenu(menu);
     }

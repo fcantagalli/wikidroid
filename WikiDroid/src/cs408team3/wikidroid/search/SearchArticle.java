@@ -52,7 +52,7 @@ public class SearchArticle extends AsyncTask<String, Void, String> {
         if (resultList == null) {
             Log.e(TAG, "Error when converting string to a list");
 
-            Toast t = Toast.makeText(context, "Article not found", Toast.LENGTH_SHORT);
+            Toast t = Toast.makeText(context, R.string.error_article_not_found, Toast.LENGTH_SHORT);
             t.setGravity(Gravity.CENTER, 5, 5);
             t.show();
         } else {

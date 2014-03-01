@@ -131,6 +131,41 @@ public class TabManager {
 
             if (convertView == null) {
                 view = mInflater.inflate(mResource, parent, false);
+<<<<<<< HEAD
+                favorite = (CheckBox) view.findViewById(R.id.drawer_fav_link);
+                final int pos = position;
+                favorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        CheckBox fav = (CheckBox) v;
+                        if (fav.isChecked()) {
+
+                            if (getItem(pos).getTitle().equals("") == false) {
+                                Log.d("favLink", "is now checked");
+                                Log.d("favLink", "oioi" + getItem(pos).getTitle() + "kkk");
+                                Utils.SaveLink(mContext, getItem(pos).getTitle(), getItem(pos).getUrl());
+                                // Utils.DeleteLink(v.getContext(),
+                                // getItem(pos).getTitle());
+                            }
+                            else {
+                                fav.setChecked(false);
+                                Utils.DeleteLink(mContext, getItem(pos).getTitle());
+                            }
+
+                        }
+                        else {
+
+                            WebView w = getItem(pos);
+                            if (w.getTitle().equals("") == false && w.getUrl() != null) {
+                                Log.d("favLink", "is now unchecked");
+                                Log.d("favLink", "oioi " + w.getTitle());
+                                Log.d("favLink", w.getUrl());
+                                // Utils.SaveLink(v.getContext(), w.getTitle(),
+                                // w.getUrl());
+                            }
+=======
+>>>>>>> ea9e34262a683c4404993edd631cda8a2bce871e
 
             } else {
                 view = convertView;

@@ -37,6 +37,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
+import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 import com.hyperionics.war_test.Lt;
@@ -81,9 +82,14 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private CharSequence           mDrawerTitle;
     private CharSequence           mTitle;
 
+<<<<<<< HEAD
     // Indicator for that web page has already been loaded at least once
     private boolean                mFirstPageLoaded        = false;
 
+    private ShareActionProvider    mShareActionProvider;
+
+=======
+>>>>>>> ea9e34262a683c4404993edd631cda8a2bce871e
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +152,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(this);
+
+        mDrawerList.setItemsCanFocus(true);
 
         // Disable Drawer Scrim Color
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
@@ -255,7 +263,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 return false;
             }
         });
-        // add a button on menu to save the article
+
+        // Share function
+        // MenuItem share = menu.findItem(R.id.action_share_article);
+
+        // Fetch and store ShareActionProvider
+        // mShareActionProvider = (ShareActionProvider)
+        // share.getActionProvider();
+
+        // setShareIntent(mWebPage);
 
         return true;
     }

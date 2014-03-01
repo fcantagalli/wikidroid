@@ -27,16 +27,27 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name="cs408team3.wikidroid.ListSaveLinks"
             android:label="@string/title_activity_list_save_links" >
+            
+        </activity>
+        <activity
+            android:name="cs408team3.wikidroid.listArticles.ListSaveArticles"
+            android:label="Saved Article">
+            
+        </activity>
+        
+        <activity
+            android:name="cs408team3.wikidroid.listArticles.LoadSavedStuffs"
+            android:label="@string/title_activity_load_saved_stuffs" >
         </activity>
     </application>
 

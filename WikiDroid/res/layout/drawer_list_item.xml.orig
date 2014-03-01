@@ -13,9 +13,15 @@
 
     <TextView
         android:id="@+id/drawer_list_item_text"
+<<<<<<< HEAD
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+=======
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="95"
+>>>>>>> ea9e34262a683c4404993edd631cda8a2bce871e
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/drawer_text" />
 

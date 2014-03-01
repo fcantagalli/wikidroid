@@ -142,11 +142,13 @@ public class TabManager {
                             if (getItem(pos).getTitle().equals("") == false) {
                                 Log.d("favLink", "is now checked");
                                 Log.d("favLink", "oioi" + getItem(pos).getTitle() + "kkk");
+                                Utils.SaveLink(mContext, getItem(pos).getTitle(), getItem(pos).getUrl());
                                 // Utils.DeleteLink(v.getContext(),
                                 // getItem(pos).getTitle());
                             }
                             else {
                                 fav.setChecked(false);
+                                Utils.DeleteLink(mContext, getItem(pos).getTitle());
                             }
 
                         }
@@ -170,6 +172,7 @@ public class TabManager {
 
             try {
                 text = (TextView) view.findViewById(mFieldId);
+
             } catch (ClassCastException e) {
                 Log.e(TAG, "You must supply a resource ID for a TextView");
                 throw new IllegalStateException(TAG + " requires the resource ID to be a TextView", e);

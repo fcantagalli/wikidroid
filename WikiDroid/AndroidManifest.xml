@@ -47,7 +47,7 @@
         
         <activity
             android:name="cs408team3.wikidroid.listArticles.LoadSavedStuffs"
-            android:label="@string/title_activity_load_saved_stuffs" >
+            android:label="@string/title_activity_list_save_links" >
         </activity>
     </application>
 

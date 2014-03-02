@@ -12,22 +12,21 @@
         android:showAsAction="always"
         android:title="@string/action_add_tab"
         android:visible="false"/>
-    
-    <item 
-        android:id="@+id/action_share_article"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_share"
-        android:title="@string/action_share_article"/>
-
     <item
         android:id="@+id/languages"
+        android:orderInCategory="97"
         android:title="@string/action_languages"/>
-    
     <item
         android:id="@+id/saveArticle"
-        android:title="@string/action_save_article"
-        android:showAsAction="never"/>
-    
+        android:orderInCategory="98"
+        android:showAsAction="never"
+        android:title="@string/action_save_article"/>
+    <item
+        android:id="@+id/action_share_article"
+        android:icon="@drawable/ic_action_share"
+        android:orderInCategory="99"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_share_article"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

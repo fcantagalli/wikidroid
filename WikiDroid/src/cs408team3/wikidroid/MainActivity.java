@@ -72,7 +72,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private FrameLayout            mContentFrame;
     private WebView                mWebPage;
     private MenuItem               mSearchMenuItem;
-    private MenuItem               mSaveArticleMenuItem;
     private ProgressBar            mWebProgressBar;
     private Toast                  mToast;
 
@@ -80,9 +79,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     private CharSequence           mDrawerTitle;
     private CharSequence           mTitle;
-
-    // Indicator for that web page has already been loaded at least once
-    private boolean                mFirstPageLoaded        = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,6 +201,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         menu.findItem(R.id.saveArticle).setVisible(!drawerOpen);
         // Hide languages
         menu.findItem(R.id.languages).setVisible(!drawerOpen);
+        // Hide share
+        menu.findItem(R.id.action_share_article).setVisible(!drawerOpen);
 
         return super.onPrepareOptionsMenu(menu);
     }

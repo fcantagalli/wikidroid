@@ -25,9 +25,6 @@ import android.webkit.WebView;
 import com.hyperionics.war_test.WebArchiveReader;
 
 import cs408team3.wikidroid.R;
-import cs408team3.wikidroid.R.id;
-import cs408team3.wikidroid.R.layout;
-import cs408team3.wikidroid.R.menu;
 
 public class LoadSavedStuffs extends Activity {
 

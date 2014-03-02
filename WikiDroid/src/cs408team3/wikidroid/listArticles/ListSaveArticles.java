@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import cs408team3.wikidroid.R;
@@ -43,8 +44,14 @@ public class ListSaveArticles extends Activity {
         // return a list with the name of the files saved. the name of the file
         // is the title of the article.
         ArrayList<String> articles = getSavedArticlesList();
-        // return a list with the name of the files saved. the name of the file
-        // is the title of the article.
+
+        // put, the name of the articles saved on the Map. If there is a saved
+        // article and link, it will only show the article saved, not the link
+
+        for (String s : articles) {
+            mapLinks.put(s, null); // null to know they are name files and not
+                                   // links
+        }
 
         // initialize listArticles
         listArticles = new ArrayList<String>();
@@ -54,24 +61,14 @@ public class ListSaveArticles extends Activity {
             Set<String> keys = mapLinks.keySet();
 
             for (String s : keys) {
-                listArticles.add(s);
+                listArticles.add(Utils.trimWikipediaTitle(s));
             }
         }
 
-        for (String s : articles) {
-            listArticles.add(Utils.trimWikipediaTitle(s));
-        }
-
-        // put, the name of the articles saved on the Map
-        for (String s : articles) {
-            mapLinks.put(s, null); // null to know they are name files and not
-                                   // links
-        }
 
         // TODO - Fix this part with a custom arrayAdpater
-        // ListAdapter adapter = new ListAdapter(this,)
-        // listView.setAdapter(adapter);
-
+        ListAdapter adapter = new ListAdapter(this, R.layout.article_list_item, R.id.text_list_article, R.id.img_list_article);
+        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -155,6 +152,7 @@ public class ListSaveArticles extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
             TextView text;
+            ImageView imgView;
 
             if (convertView == null) {
                 view = mInflater.inflate(mResource, parent, false);
@@ -165,12 +163,17 @@ public class ListSaveArticles extends Activity {
 
             try {
                 text = (TextView) view.findViewById(mFieldId);
+                imgView = (ImageView) view.findViewById(mImgFieldId);
 
             } catch (ClassCastException e) {
                 Log.e(TAG, "You must supply a resource ID for a TextView");
                 throw new IllegalStateException(TAG + " requires the resource ID to be a TextView", e);
             }
 
+            text.setText(getItem(position));
+            if (mapLinks.get(getItem(position)) == null) {
+                imgView.setVisibility(View.INVISIBLE);
+            }
             return view;
         }
 

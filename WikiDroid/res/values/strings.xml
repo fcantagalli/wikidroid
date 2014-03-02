@@ -30,6 +30,8 @@
     
     <!-- string for save article -->
     <string name="title_activity_list_save_links">ListSaveLinks</string>
+    <string name="title_activity_load_saved_stuffs">List Saved Stuffs</string>
+    
 <!-- string for share article -->
     <string name="action_share_article">Share Article</string>
     <string name="hello_world">Hello world!</string>

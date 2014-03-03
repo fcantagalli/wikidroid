@@ -44,11 +44,11 @@ public class ListSaveArticles extends Activity {
         listView = (ListView) findViewById(R.id.listView1);
 
         mapLinks = getSavedLinkList();
-
+        Log.i("oii", "maps: " + mapLinks);
         // return a list with the name of the files saved. the name of the file
         // is the title of the article.
         ArrayList<String> articles = getSavedArticlesList();
-
+        Log.i("oii", "savedLinks: " + articles);
         // put, the name of the articles saved on the Map. If there is a saved
         // article and link, it will only show the article saved, not the link
 
@@ -80,23 +80,31 @@ public class ListSaveArticles extends Activity {
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // TODO Auto-generated method stub
                 String filename = listArticles.get(arg2);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                    filename += ".mht";
+
+                if (mapLinks.get(filename) == null) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                        filename += ".mht";
+                    }
+                    else {
+                        filename += ".xml";
+                    }
+                    // send the name of the article to somewhere to show the
+                    // saved
+                    // link.
+                    Intent intent = new Intent(getApplicationContext(), LoadSavedStuffs.class);
+                    intent.putExtra("filename", filename);
+                    startActivity(intent);
                 }
                 else {
-                    filename += ".xml";
+                    Intent intent = new Intent(getApplicationContext(), LoadSavedStuffs.class);
+                    intent.putExtra("url", (String) mapLinks.get(filename));
+                    startActivity(intent);
                 }
 
-                // send the name of the article to somewhere to show the saved
-                // link.
-                Intent intent = new Intent(getApplicationContext(), LoadSavedStuffs.class);
-                intent.putExtra("filename", filename);
-                startActivity(intent);
 
             }
         });

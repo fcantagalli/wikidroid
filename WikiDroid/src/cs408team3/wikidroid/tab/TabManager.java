@@ -143,26 +143,28 @@ public class TabManager {
 
             favorite.setOnClickListener(new View.OnClickListener() {
 
+                final int pos = position;
                 @Override
                 public void onClick(View v) {
                     CheckBox fav = (CheckBox) v;
-                    if (fav.isChecked()) {
+                    if (!fav.isChecked()) { // is not checked, remove the
+                                            // website from the list
                         if (getItem(position).getTitle() != null) {
                             Log.d("favLink", "is now checked");
                             Log.d("favLink", "oioi" + getItem(position).getTitle() + "kkk");
-                            // Utils.DeleteLink(v.getContext(),
-                            // getItem(pos).getTitle());
+                            Utils.DeleteLink(v.getContext(),
+                                    getItem(pos).getTitle());
                         } else {
                             fav.setChecked(false);
                         }
-                    } else {
+                    } else { // if it is checked, put the website on the list
                         WebView w = getItem(position);
                         if (w.getTitle() != null && w.getUrl() != null) {
                             Log.d("favLink", "is now unchecked");
                             Log.d("favLink", "oioi " + w.getTitle());
                             Log.d("favLink", w.getUrl());
-                            // Utils.SaveLink(v.getContext(), w.getTitle(),
-                            // w.getUrl());
+                            Utils.SaveLink(v.getContext(), w.getTitle(),
+                                    w.getUrl());
                         }
 
                     }

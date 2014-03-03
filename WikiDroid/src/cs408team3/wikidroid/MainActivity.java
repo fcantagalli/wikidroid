@@ -1,8 +1,5 @@
 package cs408team3.wikidroid;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import android.app.Activity;
@@ -16,7 +13,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -38,10 +34,6 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
-
-import com.hyperionics.war_test.Lt;
-import com.hyperionics.war_test.WebArchiveReader;
-
 import cs408team3.wikidroid.blur.Blur;
 import cs408team3.wikidroid.blur.BlurTask;
 import cs408team3.wikidroid.languages.LanguageList;
@@ -383,55 +375,62 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         langList.execute();
     }
 
-    // load the page on a webView;
-    private void loadSavedWebPage(WebView webView, String fileName) {
-        File sdCard = Environment.getExternalStorageDirectory();
+    /*
+     * // load the page on a webView;
+     * private void loadSavedWebPage(WebView webView, String fileName) {
+     * File sdCard = Environment.getExternalStorageDirectory();
+     * 
+     * if (android.os.Build.VERSION.SDK_INT >=
+     * android.os.Build.VERSION_CODES.KITKAT) {
+     * File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName +
+     * ".mht");
+     * webView.loadUrl("file:///" + dir.toString());
+     * }
+     * else { // This part is for code below KITKAT, i didn't tested it yet.
+     * File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName +
+     * ".xml");
+     * try {
+     * // read the saved file.
+     * FileInputStream is = new FileInputStream(dir);
+     * WebArchiveReader wr = new WebArchiveReader() {
+     * 
+     * @Override
+     * public void onFinished(WebView v) {
+     * // we are notified here when the page is fully loaded.
+     * continueWhenLoaded(v);
+     * }
+     * };
+     * 
+     * if (wr.readWebArchive(is)) {
+     * wr.loadToWebView(webView);
+     * }
+     * } catch (IOException e) {
+     * e.printStackTrace();
+     * }
+     * }
+     * }
+     */
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName + ".mht");
-            webView.loadUrl("file:///" + dir.toString());
-        }
-        else { // This part is for code below KITKAT, i didn't tested it yet.
-            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName + ".xml");
-            try {
-                // read the saved file.
-                FileInputStream is = new FileInputStream(dir);
-                WebArchiveReader wr = new WebArchiveReader() {
-
-                    @Override
-                    public void onFinished(WebView v) {
-                        // we are notified here when the page is fully loaded.
-                        continueWhenLoaded(v);
-                    }
-                };
-
-                if (wr.readWebArchive(is)) {
-                    wr.loadToWebView(webView);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void continueWhenLoaded(WebView webView) {
-        Lt.d("Page from WebArchive fully loaded.");
-        // If you need to set your own WebViewClient, do it here,
-        // after the WebArchive was fully loaded:
-        webView.setWebViewClient(mWebViewClient = new WebViewClient() {
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                Log.i(TAG, "Page " + url + " loaded");
-
-                setTitle(mTabManager.getTitle(view), ACTIONBAR_NORMAL_TITLE);
-                // Refresh drawer list
-                mDrawerListAdapter.notifyDataSetChanged();
-            }
-        });
-        // Any other code we need to execute after loading a page from a
-        // WebArchive...
-    }
+    /*
+     * private void continueWhenLoaded(WebView webView) {
+     * Lt.d("Page from WebArchive fully loaded.");
+     * // If you need to set your own WebViewClient, do it here,
+     * // after the WebArchive was fully loaded:
+     * webView.setWebViewClient(mWebViewClient = new WebViewClient() {
+     * 
+     * @Override
+     * public void onPageFinished(WebView view, String url) {
+     * Log.i(TAG, "Page " + url + " loaded");
+     * 
+     * setTitle(mTabManager.getTitle(view), ACTIONBAR_NORMAL_TITLE);
+     * // Refresh drawer list
+     * mDrawerListAdapter.notifyDataSetChanged();
+     * }
+     * });
+     * // Any other code we need to execute after loading a page from a
+     * // WebArchive...
+     * }
+     */
 
     private class WikiDroidActionBarDrawerToggle extends ActionBarDrawerToggle implements BlurTask.Listener {
 

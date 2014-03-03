@@ -21,14 +21,18 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.hyperionics.war_test.WebArchiveReader;
 
 import cs408team3.wikidroid.R;
+import cs408team3.wikidroid.Utils;
 
 public class LoadSavedStuffs extends Activity {
 
-    private WebView webpage;
+    private WebView       webpage;
+    private WebViewClient mWebViewClient;
+    private final String  TAG = "LoadStuffs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,18 @@ public class LoadSavedStuffs extends Activity {
 
         webpage = (WebView) findViewById(R.id.webView1);
         webpage.getSettings().setJavaScriptEnabled(true);
+
+        mWebViewClient = new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                Log.i(TAG, "Page " + url + " loaded");
+
+                getActionBar().setTitle(Utils.trimWikipediaTitle(view.getTitle()));
+
+            }
+        };
+        // set webView client to update action bar.
+        webpage.setWebViewClient(mWebViewClient);
 
         // this part is to load a saved link, so just call load on the webview
         String link = getIntent().getStringExtra("url");
@@ -50,6 +66,10 @@ public class LoadSavedStuffs extends Activity {
             Log.i("oii1", "filename not null" + filename);
             loadSavedWebPage(webpage, filename);
         }
+
+        // if (webpage.getTitle() != null) {
+        this.getActionBar().setTitle(Utils.trimWikipediaTitle(webpage.getTitle()));
+        // }
 
     }
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,9 @@ public class ListSaveArticles extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_save_links);
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         listView = (ListView) findViewById(R.id.listView1);
 
         mapLinks = getSavedLinkList();
@@ -49,7 +53,11 @@ public class ListSaveArticles extends Activity {
         // article and link, it will only show the article saved, not the link
 
         for (String s : articles) {
-            mapLinks.put(s, null); // null to know they are name files and not
+            Log.i("oii", s);
+            String[] aux = s.split("[.]");
+            // Log.i("oii", "" + Arrays.toString(aux));
+            mapLinks.put(aux[0], null); // null to know they are name files and
+                                        // not
                                    // links
         }
 
@@ -61,10 +69,11 @@ public class ListSaveArticles extends Activity {
             Set<String> keys = mapLinks.keySet();
 
             for (String s : keys) {
-                listArticles.add(Utils.trimWikipediaTitle(s));
+                listArticles.add(s);
             }
         }
 
+        // Log.d("oii", "maps: " + mapLinks);
 
         // TODO - Fix this part with a custom arrayAdpater
         ListAdapter adapter = new ListAdapter(this, R.layout.article_list_item, R.id.text_list_article, R.id.img_list_article);
@@ -76,6 +85,12 @@ public class ListSaveArticles extends Activity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // TODO Auto-generated method stub
                 String filename = listArticles.get(arg2);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    filename += ".mht";
+                }
+                else {
+                    filename += ".xml";
+                }
 
                 // send the name of the article to somewhere to show the saved
                 // link.
@@ -170,8 +185,9 @@ public class ListSaveArticles extends Activity {
                 throw new IllegalStateException(TAG + " requires the resource ID to be a TextView", e);
             }
 
-            text.setText(getItem(position));
-            if (mapLinks.get(getItem(position)) == null) {
+            text.setText(Utils.trimWikipediaTitle(getItem(position)));
+            if (mapLinks.get(getItem(position)) != null) {
+                Log.d("oii", "Entrou aquiii");
                 imgView.setVisibility(View.INVISIBLE);
             }
             return view;

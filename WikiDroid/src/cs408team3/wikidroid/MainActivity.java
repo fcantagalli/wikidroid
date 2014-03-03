@@ -47,6 +47,7 @@ import cs408team3.wikidroid.blur.BlurTask;
 import cs408team3.wikidroid.languages.LanguageList;
 import cs408team3.wikidroid.languages.Languages;
 import cs408team3.wikidroid.languages.UrlList;
+import cs408team3.wikidroid.listArticles.ListSaveArticles;
 import cs408team3.wikidroid.search.SearchArticle;
 import cs408team3.wikidroid.tab.TabManager;
 
@@ -246,6 +247,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
                     return true;
                 }
+
             }
 
             @Override
@@ -266,7 +268,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             return true;
         }
         // Handle your other action bar items...
+        Log.i(TAG, "item id: " + item.getItemId());
         switch (item.getItemId()) {
+
         case R.id.action_add_tab:
             if (!mTabManager.newTab()) {
                 if (mToast != null) {
@@ -279,9 +283,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 }
 
             return true;
+
         case R.id.languages:
             showLanguagesDialog();
-
             return true;
 
         case R.id.saveArticle:
@@ -293,6 +297,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             t.setGravity(Gravity.CENTER, 5, 5);
             t.show();
             return true;
+
         case R.id.action_share_article:
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
@@ -303,6 +308,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             Log.i(TAG, "textos : \t " + mWebPage.getUrl() + "\t" + mWebPage.getTitle());
             shareIntent.setType("text/plain");
             startActivity(Intent.createChooser(shareIntent, "Share via"));
+            return true;
+
+        case R.id.action_show_saved_articles:
+            Intent intent = new Intent(this, ListSaveArticles.class);
+            startActivity(intent);
             return true;
 
         default:

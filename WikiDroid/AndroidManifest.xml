@@ -42,13 +42,21 @@
         <activity
             android:name="cs408team3.wikidroid.listArticles.ListSaveArticles"
             android:label="Saved Article">
-            
+     
         </activity>
         
         <activity
             android:name="cs408team3.wikidroid.listArticles.LoadSavedStuffs"
-            android:label="@string/title_activity_list_save_links" >
+            android:label="@string/title_activity_list_save_links"
+            android:parentActivityName="cs408team3.wikidroid.listArticles.ListSaveArticles" >
+            
+        <!-- Parent activity meta-data to support API level 7+ -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="cs408team3.wikidroid.listArticles.ListSaveArticles" />
+        
         </activity>
+        
     </application>
 
 </manifest>

@@ -334,7 +334,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 builder.setTitle(R.string.action_languages);
 
                 if (languageOptions.size() > 0) {
-                    ListAdapter stringListAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, languageOptions);
+                    ListAdapter stringListAdapter = new ArrayAdapter<String>(mContext, R.layout.languages_list_item, languageOptions);
 
                     builder.setSingleChoiceItems(stringListAdapter, -1, null)
                             .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -379,7 +379,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
      * // load the page on a webView;
      * private void loadSavedWebPage(WebView webView, String fileName) {
      * File sdCard = Environment.getExternalStorageDirectory();
-     * 
+     *
      * if (android.os.Build.VERSION.SDK_INT >=
      * android.os.Build.VERSION_CODES.KITKAT) {
      * File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName +
@@ -393,14 +393,14 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
      * // read the saved file.
      * FileInputStream is = new FileInputStream(dir);
      * WebArchiveReader wr = new WebArchiveReader() {
-     * 
+     *
      * @Override
      * public void onFinished(WebView v) {
      * // we are notified here when the page is fully loaded.
      * continueWhenLoaded(v);
      * }
      * };
-     * 
+     *
      * if (wr.readWebArchive(is)) {
      * wr.loadToWebView(webView);
      * }
@@ -417,11 +417,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
      * // If you need to set your own WebViewClient, do it here,
      * // after the WebArchive was fully loaded:
      * webView.setWebViewClient(mWebViewClient = new WebViewClient() {
-     * 
+     *
      * @Override
      * public void onPageFinished(WebView view, String url) {
      * Log.i(TAG, "Page " + url + " loaded");
-     * 
+     *
      * setTitle(mTabManager.getTitle(view), ACTIONBAR_NORMAL_TITLE);
      * // Refresh drawer list
      * mDrawerListAdapter.notifyDataSetChanged();

@@ -39,8 +39,11 @@ public class LoadSavedStuffs extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_saved_stuffs);
 
+
         webpage = (WebView) findViewById(R.id.webView1);
         webpage.getSettings().setJavaScriptEnabled(true);
+        webpage.getSettings().setBuiltInZoomControls(true);
+        webpage.getSettings().setDisplayZoomControls(false);
 
         mWebViewClient = new WebViewClient() {
             @Override

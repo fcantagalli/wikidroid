@@ -97,11 +97,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             public void onProgressChanged(WebView view, int progress) {
                 Log.v(TAG, "Page load progress " + progress);
 
-                if (progress < 100) {
-                    startWebProgressBar();
-                }
+                if (mTabManager.isForeground(view)) {
+                    if (progress < 100) {
+                        startWebProgressBar();
+                    }
 
-                if (progress == 100) {
+                    if (progress == 100) {
+                        stopWebProgressBar();
+                    }
+                } else {
+                    // Force progress bar stop
                     stopWebProgressBar();
                 }
             }
@@ -321,6 +326,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mWebPage = mTabManager.displayTab(position);
         mContentFrame.addView(mWebPage, 0);
         setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
+
+        // Stop progress bar if current tab is changed
+        if (parent.getSelectedItemPosition() != position) {
+            stopWebProgressBar();
+        }
+
         mDrawerLayout.closeDrawers();
     }
 

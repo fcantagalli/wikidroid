@@ -41,37 +41,38 @@ import cs408team3.wikidroid.languages.Languages;
 import cs408team3.wikidroid.languages.UrlList;
 import cs408team3.wikidroid.listArticles.ListSaveArticles;
 import cs408team3.wikidroid.search.SearchArticle;
+import cs408team3.wikidroid.tab.TabListAdapter;
 import cs408team3.wikidroid.tab.TabManager;
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
-    private static final String    TAG                    = "MainActivity";
+    private static final String   TAG                    = "MainActivity";
 
-    private static final int       ACTIONBAR_NORMAL_TITLE = 0x1;
-    private static final int       ACTIONBAR_DRAWER_TITLE = 0x2;
+    private static final int      ACTIONBAR_NORMAL_TITLE = 0x1;
+    private static final int      ACTIONBAR_DRAWER_TITLE = 0x2;
 
-    private final Context          mContext               = this;
+    private final Context         mContext               = this;
 
-    private TabManager             mTabManager;
-    private WebViewClient          mWebViewClient;
-    private WebChromeClient        mWebChromeClient;
-    private Languages              mLanguages;
+    private TabManager            mTabManager;
+    private WebViewClient         mWebViewClient;
+    private WebChromeClient       mWebChromeClient;
+    private Languages             mLanguages;
 
-    private DrawerLayout           mDrawerLayout;
+    private DrawerLayout          mDrawerLayout;
 
-    private TabManager.ListAdapter mDrawerListAdapter;
-    private ListView               mDrawerList;
-    private ImageView              mBlurImage;
-    private FrameLayout            mContentFrame;
-    private WebView                mWebPage;
-    private MenuItem               mSearchMenuItem;
-    private ProgressBar            mWebProgressBar;
-    private Toast                  mToast;
+    private TabListAdapter        mDrawerListAdapter;
+    private ListView              mDrawerList;
+    private ImageView             mBlurImage;
+    private FrameLayout           mContentFrame;
+    private WebView               mWebPage;
+    private MenuItem              mSearchMenuItem;
+    private ProgressBar           mWebProgressBar;
+    private Toast                 mToast;
 
-    private ActionBarDrawerToggle  mDrawerToggle;
+    private ActionBarDrawerToggle mDrawerToggle;
 
-    private CharSequence           mDrawerTitle;
-    private CharSequence           mTitle;
+    private CharSequence          mDrawerTitle;
+    private CharSequence          mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,8 +138,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         // Set the adapter for the list view
-        // TODO: Potential problem?
-        mDrawerListAdapter = mTabManager.new ListAdapter(this, R.layout.drawer_list_item, R.id.drawer_list_item_text);
+        mDrawerListAdapter = new TabListAdapter(this, R.layout.drawer_list_item, R.id.drawer_list_item_text, mTabManager);
+        mDrawerListAdapter.setOnTabRemoveListener(new TabListAdapter.OnTabRemoveListener() {
+
+            @Override
+            public void onTabRemove(int position) {
+                mTabManager.removeTab(position);
+                mDrawerListAdapter.notifyDataSetChanged();
+            }
+        });
         mDrawerList.setAdapter(mDrawerListAdapter);
 
         // Set the list's click listener

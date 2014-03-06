@@ -5,17 +5,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import cs408team3.wikidroid.R;
 import cs408team3.wikidroid.Utils;
 
@@ -29,6 +21,7 @@ public class TabManager {
     private ArrayList<WebView> mTabs;
     private WebViewClient      mWebViewClient;
     private WebChromeClient    mWebChromeClient;
+
     private AtomicInteger      mForegroundTabIndex;
 
     public TabManager(Context context, int tabLimit, WebViewClient webViewClient, WebChromeClient webChromeClient) {
@@ -37,6 +30,7 @@ public class TabManager {
         mTabs = new ArrayList<WebView>(tabLimit);
         mWebViewClient = webViewClient;
         mWebChromeClient = webChromeClient;
+
         mForegroundTabIndex = new AtomicInteger(Integer.MIN_VALUE);
     }
 
@@ -79,7 +73,7 @@ public class TabManager {
         return getTab(index);
     }
 
-    private boolean removeTab(int index) {
+    public boolean removeTab(int index) {
         return mTabs.remove(index) != null;
     }
 
@@ -117,109 +111,6 @@ public class TabManager {
         int viewIndex = mTabs.indexOf(view);
 
         return viewIndex == mForegroundTabIndex.get();
-    }
-
-    public class ListAdapter extends BaseAdapter {
-
-        private static final String TAG = "TabManager.ListAdapter";
-
-        private LayoutInflater      mInflater;
-        private int                 mResource;
-        private int                 mFieldId;
-
-        public ListAdapter(Context context, int resource, int textViewResourceId) {
-            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mResource = resource;
-            mFieldId = textViewResourceId;
-        }
-
-        @Override
-        public int getCount() {
-            return mTabs.size();
-        }
-
-        @Override
-        public WebView getItem(int position) {
-            return mTabs.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View view;
-            TextView text;
-
-            if (convertView == null) {
-                view = mInflater.inflate(mResource, parent, false);
-
-            } else {
-                view = convertView;
-            }
-
-            CheckBox favorite = (CheckBox)
-                    view.findViewById(R.id.drawer_fav_link);
-            ImageButton removeTab = (ImageButton)
-                    view.findViewById(R.id.drawer_remove_tab);
-
-            favorite.setOnClickListener(new View.OnClickListener() {
-
-                final int pos = position;
-                @Override
-                public void onClick(View v) {
-                    CheckBox fav = (CheckBox) v;
-                    if (!fav.isChecked()) { // is not checked, remove the
-                                            // website from the list
-                        if (getItem(position).getTitle() != null) {
-                            Log.d("favLink", "is now checked");
-                            Log.d("favLink", "oioi" + getItem(position).getTitle() + "kkk");
-                            Utils.DeleteLink(v.getContext(),
-                                    getItem(pos).getTitle());
-                        } else {
-                            fav.setChecked(false);
-                        }
-                    } else { // if it is checked, put the website on the list
-                        WebView w = getItem(position);
-                        if (w.getTitle() != null && w.getUrl() != null) {
-                            Log.d("favLink", "is now unchecked");
-                            Log.d("favLink", "oioi " + w.getTitle());
-                            Log.d("favLink", w.getUrl());
-                            Utils.SaveLink(v.getContext(), w.getTitle(),
-                                    w.getUrl());
-                        }
-
-                    }
-                }
-
-            });
-            removeTab.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    removeTab(position);
-                    notifyDataSetChanged();
-                }
-
-            });
-
-            try {
-                text = (TextView) view.findViewById(mFieldId);
-
-            } catch (ClassCastException e) {
-                Log.e(TAG, "You must supply a resource ID for a TextView");
-                throw new IllegalStateException(TAG + " requires the resource ID to be a TextView", e);
-            }
-
-            WebView webView = getItem(position);
-            String webViewTitle = getTitle(webView);
-            text.setText(webViewTitle);
-
-            return view;
-        }
-
     }
 
 }

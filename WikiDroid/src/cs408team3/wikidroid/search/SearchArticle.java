@@ -56,7 +56,13 @@ public class SearchArticle extends AsyncTask<String, Void, String> {
             t.setGravity(Gravity.CENTER, 5, 5);
             t.show();
         } else {
-            webPage.loadUrl(resultList.get(0).getLink());
+            for (QueryContentHolder q : resultList) {
+                String link = q.getLink();
+                if (link.contains("wikipedia.org/wiki")) {
+                    webPage.loadUrl(link);
+                    break;
+                }
+            }
         }
     }
 

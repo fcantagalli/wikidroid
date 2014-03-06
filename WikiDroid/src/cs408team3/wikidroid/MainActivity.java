@@ -372,7 +372,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 if (languageOptions.size() > 0) {
                     ListAdapter stringListAdapter = new ArrayAdapter<String>(mContext, R.layout.languages_list_item, languageOptions);
 
-                    builder.setSingleChoiceItems(stringListAdapter, -1, null)
+                    builder.setSingleChoiceItems(stringListAdapter, 0, null)
                             .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 
                                 @Override
@@ -381,8 +381,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                                     final int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
 
                                     // getCheckedItemPosition will return -1 if
-                                    // no selection made
-                                    if (selectedPosition == -1) {
+                                    // no selection made, 0 if current language
+                                    // is selected
+                                    if (selectedPosition == -1 || selectedPosition == 0) {
                                         // Do nothing
                                     }
                                     // Use position to find the proper URL

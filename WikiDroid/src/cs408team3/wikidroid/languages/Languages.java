@@ -56,6 +56,10 @@ public class Languages {
             Log.d("getAvailableLanguages", debugString);
 
             ArrayList<String> languages = new ArrayList<String>();
+
+            // Add current language to the front
+            languages.add(findCurrentLanguage(url));
+
             // Parse out each language code; convert to string
             for (int i = 0; i < nl.getLength(); i++) {
                 languages.add(nl.item(i).getTextContent());
@@ -106,6 +110,9 @@ public class Languages {
             ArrayList<String> URLs = new ArrayList<String>();
             XPathExpression xpe = xpath.compile("//@url");
             NodeList nl = (NodeList) xpe.evaluate(doc, XPathConstants.NODESET);
+
+            // Add current URL to the front
+            URLs.add(url);
 
             // Parse out each URL code; convert to string
             for (int i = 0; i < nl.getLength(); i++) {

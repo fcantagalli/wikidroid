@@ -1,5 +1,6 @@
 package cs408team3.wikidroid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -47,6 +48,8 @@ import cs408team3.wikidroid.tab.TabManager;
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
     private static final String   TAG                    = "MainActivity";
+
+    private static final String   STATE_OPEN_TAB_LINKS   = "open_tab_links";
 
     private static final int      ACTIONBAR_NORMAL_TITLE = 0x1;
     private static final int      ACTIONBAR_DRAWER_TITLE = 0x2;
@@ -116,7 +119,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mTabManager = new TabManager(this, mWebViewClient, mWebChromeClient);
         if (mTabManager.size() == 0) {
             mTabManager.newTab();
-            mTabManager.setForeground(0);
         }
         mLanguages = new Languages();
 
@@ -173,11 +175,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        persistOpenTabs(outState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        // TODO: NOT WORKING YET.
+        restoreOpenTabs(savedInstanceState);
+        // mWebPage = mTabManager.displayTab(0);
     }
 
     @Override
@@ -511,6 +517,39 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     private void stopWebProgressBar() {
         if (mWebProgressBar.getVisibility() != View.GONE) {
             mWebProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void persistOpenTabs(Bundle outState) {
+        if (outState == null) {
+            return;
+        }
+
+        ArrayList<String> links = mTabManager.getAllLinks();
+
+        if (links != null && links.size() > 0) {
+            outState.putStringArrayList(STATE_OPEN_TAB_LINKS, links);
+
+            Log.d(TAG, "Open tabs saved: " + links);
+        }
+    }
+
+    private void restoreOpenTabs(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            return;
+        }
+
+        ArrayList<String> links = savedInstanceState.getStringArrayList(STATE_OPEN_TAB_LINKS);
+
+        if (links != null) {
+            ArrayList<String> currentLinks = mTabManager.getAllLinks();
+            if (currentLinks != null && currentLinks.equals(links)) {
+                return;
+            }
+
+            mTabManager.restoreAllLinks(links);
+
+            Log.d(TAG, "Open tabs restored: " + links);
         }
     }
 

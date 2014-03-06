@@ -3,7 +3,6 @@ package cs408team3.wikidroid.tab;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -38,7 +37,6 @@ public class TabManager {
         this(context, DEFAULT_TAB_LIMIT, webViewClient, webChromeClient);
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     public boolean newTab() {
         WebView webView = new WebView(mContext);
         webView.getSettings().setBuiltInZoomControls(true);
@@ -64,10 +62,22 @@ public class TabManager {
         }
     }
 
+    /**
+     * Get WebView object by index.
+     *
+     * @param index
+     * @return
+     */
     public WebView getTab(int index) {
         return mTabs.get(index);
     }
 
+    /**
+     * Get WebView object by index and set that WebView to foreground.
+     *
+     * @param index
+     * @return
+     */
     public WebView displayTab(int index) {
         setForeground(index);
         return getTab(index);
@@ -99,6 +109,31 @@ public class TabManager {
         WebView webView = getTab(index);
 
         return getTitle(webView);
+    }
+
+    public ArrayList<String> getAllLinks() {
+        if (mTabs.size() > 0) {
+            ArrayList<String> links = new ArrayList<String>(mTabs.size());
+
+            for (WebView view : mTabs) {
+                String url = view.getUrl();
+                if (url != null) {
+                    links.add(url);
+                }
+            }
+
+            return links;
+        } else {
+            return null;
+        }
+    }
+
+    public void restoreAllLinks(ArrayList<String> links) {
+        mTabs.clear();
+        for (String url : links) {
+            newTab();
+            getTab(size() - 1).loadUrl(url);
+        }
     }
 
     public synchronized boolean setForeground(int index) {

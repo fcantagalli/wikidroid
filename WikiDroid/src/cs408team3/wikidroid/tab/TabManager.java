@@ -1,6 +1,7 @@
 package cs408team3.wikidroid.tab;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -28,6 +29,7 @@ public class TabManager {
     private ArrayList<WebView> mTabs;
     private WebViewClient      mWebViewClient;
     private WebChromeClient    mWebChromeClient;
+    private AtomicInteger      mForegroundTabIndex;
 
     public TabManager(Context context, int tabLimit, WebViewClient webViewClient, WebChromeClient webChromeClient) {
         mContext = context;
@@ -35,6 +37,7 @@ public class TabManager {
         mTabs = new ArrayList<WebView>(tabLimit);
         mWebViewClient = webViewClient;
         mWebChromeClient = webChromeClient;
+        mForegroundTabIndex = new AtomicInteger(Integer.MIN_VALUE);
     }
 
     public TabManager(Context context, WebViewClient webViewClient, WebChromeClient webChromeClient) {
@@ -71,6 +74,11 @@ public class TabManager {
         return mTabs.get(index);
     }
 
+    public WebView displayTab(int index) {
+        setForeground(index);
+        return getTab(index);
+    }
+
     private boolean removeTab(int index) {
         return mTabs.remove(index) != null;
     }
@@ -93,6 +101,22 @@ public class TabManager {
         WebView webView = getTab(index);
 
         return getTitle(webView);
+    }
+
+    public synchronized boolean setForeground(int index) {
+        if (index >= 0 && index < mTabs.size()) {
+            mForegroundTabIndex.set(index);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized boolean isForeground(WebView view) {
+        int viewIndex = mTabs.indexOf(view);
+
+        return viewIndex == mForegroundTabIndex.get();
     }
 
     public class ListAdapter extends BaseAdapter {

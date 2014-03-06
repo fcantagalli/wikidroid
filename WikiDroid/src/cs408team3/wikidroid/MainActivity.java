@@ -45,12 +45,12 @@ import cs408team3.wikidroid.tab.TabManager;
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
-    private static final String    TAG                     = "MainActivity";
+    private static final String    TAG                    = "MainActivity";
 
-    private static final int       ACTIONBAR_NORMAL_TITLE  = 0x1;
-    private static final int       ACTIONBAR_DRAWER_TITLE  = 0x2;
+    private static final int       ACTIONBAR_NORMAL_TITLE = 0x1;
+    private static final int       ACTIONBAR_DRAWER_TITLE = 0x2;
 
-    private final Context          mContext                = this;
+    private final Context          mContext               = this;
 
     private TabManager             mTabManager;
     private WebViewClient          mWebViewClient;
@@ -84,7 +84,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             public void onPageFinished(WebView view, String url) {
                 Log.i(TAG, "Page " + url + " loaded");
 
-                setTitle(mTabManager.getTitle(view), ACTIONBAR_NORMAL_TITLE);
+                if (mTabManager.isForeground(view)) {
+                    setTitle(mTabManager.getTitle(view), ACTIONBAR_NORMAL_TITLE);
+                }
                 // Refresh drawer list
                 mDrawerListAdapter.notifyDataSetChanged();
             }
@@ -108,11 +110,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mTabManager = new TabManager(this, mWebViewClient, mWebChromeClient);
         if (mTabManager.size() == 0) {
             mTabManager.newTab();
+            mTabManager.setForeground(0);
         }
         mLanguages = new Languages();
 
         mDrawerTitle = getTitle();
-        mWebPage = mTabManager.getTab(0);
+        mWebPage = mTabManager.displayTab(0);
         setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
 
         mWebProgressBar = (ProgressBar) findViewById(R.id.content_progress);
@@ -272,7 +275,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 mToast.show();
             } else {
                 mDrawerListAdapter.notifyDataSetChanged();
-                }
+            }
 
             return true;
 
@@ -315,7 +318,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mContentFrame.removeView(mWebPage);
-        mWebPage = mTabManager.getTab(position);
+        mWebPage = mTabManager.displayTab(position);
         mContentFrame.addView(mWebPage, 0);
         setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
         mDrawerLayout.closeDrawers();

@@ -74,7 +74,11 @@ public class TabManager {
     }
 
     public boolean removeTab(int index) {
-        return mTabs.remove(index) != null;
+        if (mTabs.size() > 1) {
+            return mTabs.remove(index) != null;
+        } else {
+            return false;
+        }
     }
 
     public int size() {

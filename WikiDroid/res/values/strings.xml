@@ -21,6 +21,7 @@
     <string name="error_internal">Internal error</string>
     <string name="error_max_tab_reached">Max tab size reached</string>
     <string name="error_article_not_found">Article not found</string>
+    <string name="error_remove_tab_failed">Failed to remove tab</string>
 
     <!-- strings for sccessibility -->
     <string name="drawer_open">Open navigation drawer</string>
@@ -31,7 +32,8 @@
     <!-- string for save article -->
     <string name="title_activity_list_save_links">ListSaveLinks</string>
     <string name="action_show_saved_article">List of Articles Saved</string>
-<!-- string for share article -->
+
+    <!-- string for share article -->
     <string name="action_share_article">Share Article</string>
     <string name="hello_world">Hello world!</string>
     <string name="dialog_language_loading">Loading available languages&#8230;</string>

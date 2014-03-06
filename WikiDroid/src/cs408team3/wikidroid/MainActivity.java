@@ -143,8 +143,19 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
             @Override
             public void onTabRemove(int position) {
-                mTabManager.removeTab(position);
-                mDrawerListAdapter.notifyDataSetChanged();
+                boolean removed = mTabManager.removeTab(position);
+
+                if (removed) {
+                    int displayPosition = position - 1 >= 0 ? position - 1 : 0;
+                    displayWebView(displayPosition);
+                    mDrawerListAdapter.notifyDataSetChanged();
+                } else {
+                    if (mToast != null) {
+                        mToast.cancel();
+                    }
+                    mToast = Toast.makeText(mContext, R.string.error_remove_tab_failed, Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
             }
         });
         mDrawerList.setAdapter(mDrawerListAdapter);
@@ -330,10 +341,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mContentFrame.removeView(mWebPage);
-        mWebPage = mTabManager.displayTab(position);
-        mContentFrame.addView(mWebPage, 0);
-        setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
+        displayWebView(position);
 
         // Stop progress bar if current tab is changed
         if (parent.getSelectedItemPosition() != position) {
@@ -466,6 +474,13 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             mBlurImage.invalidate();
         }
 
+    }
+
+    private void displayWebView(int position) {
+        mContentFrame.removeView(mWebPage);
+        mWebPage = mTabManager.displayTab(position);
+        mContentFrame.addView(mWebPage, 0);
+        setTitle(mTabManager.getTitle(mWebPage), ACTIONBAR_NORMAL_TITLE);
     }
 
     private void setTitle(String title, int status) {

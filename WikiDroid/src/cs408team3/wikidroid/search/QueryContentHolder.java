@@ -7,19 +7,19 @@
 package cs408team3.wikidroid.search;
 
 /**
- * 
+ *
  * @author Felipe
  */
 public class QueryContentHolder {
 
-    String title;
-    String link;
-    String displayLink;
+    private String title;
+    private String link;
+    private String displayLink;
 
     public QueryContentHolder(String title, String link, String displayLink) {
-        this.title = title;
-        this.link = link;
-        this.displayLink = displayLink;
+        setTitle(title);
+        setLink(link);
+        setDisplayLink(displayLink);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class QueryContentHolder {
         return title;
     }
 
-    public void setTitle(String title) {
+    private void setTitle(String title) {
         this.title = title;
     }
 
@@ -39,7 +39,7 @@ public class QueryContentHolder {
         return link;
     }
 
-    public void setLink(String link) {
+    private void setLink(String link) {
         this.link = link;
     }
 
@@ -47,7 +47,7 @@ public class QueryContentHolder {
         return displayLink;
     }
 
-    public void setDisplayLink(String displayLink) {
+    private void setDisplayLink(String displayLink) {
         this.displayLink = displayLink;
     }
 

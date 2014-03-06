@@ -25,46 +25,23 @@ import android.util.Log;
 
 public class WikiDroidHttpClient {
 
-    private static final String TAG              = "WikiDroidHttpClient";
+    private static final String     TAG              = "WikiDroidHttpClient";
 
-    private static final String USER_AGENT       = "Mozilla/5.0";
-    private static final String API_KEY          = "AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA";
-    private static final String SEARCH_ENGINE_ID = "015353232511339500776:ppncxs5ywr4";
-    private static final String QUERY_FIELDS     = "items(displayLink,link,title)";
+    private static final String     USER_AGENT       = "Mozilla/5.0";
+    private static final String     API_KEY          = "AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA";
+    private static final String     SEARCH_ENGINE_ID = "015353232511339500776:ppncxs5ywr4";
+    private static final String     QUERY_FIELDS     = "items(displayLink,link,title)";
 
     private final AndroidHttpClient mHttpClient;
-
-    // private final static String test =
-    // "{ \"items\": [  {   \"title\": \"Brazil - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (disambiguation) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(disambiguation)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national football team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_football_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil, Indiana - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil,_Indiana\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil (1985 film) - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_(1985_film)\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazilian - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazilian\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil women's national basketball team - Wikipedia, the free ...\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_women's_national_basketball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national baseball team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_baseball_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national futsal team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_futsal_team\",   \"displayLink\": \"en.wikipedia.org\"  },  {   \"title\": \"Brazil national beach soccer team - Wikipedia, the free encyclopedia\",   \"link\": \"http://en.wikipedia.org/wiki/Brazil_national_beach_soccer_team\",   \"displayLink\": \"en.wikipedia.org\"  } ]}";
 
     public WikiDroidHttpClient() {
         mHttpClient = AndroidHttpClient.newInstance(USER_AGENT);
     }
 
-    // //&fields=items(displayLink%2Clink%2Ctitle)
-    // public static void main(String[] args) throws Exception {
-    //
-    // HttpClientExample http = new HttpClientExample();
-    //
-    // // String url = "http://www.google.com/search?q=developer";
-    // // System.out.println("Sending request to: "+url);
-    //
-    // System.out.println("Testing 1 - Send Http GET request");
-    // //http.sendGet(url);
-    // String result = http.searchGoogle("brazil");
-    // System.out.println(result);
-    //
-    // ArrayList<QueryContentHolder> parsed = http.JSONToArray(result);
-    // System.out.println(parsed);
-    // //System.out.println("\nTesting 2 - Send Http POST request");
-    // //http.sendPost();
-    //
-    // }
-
     /**
      * Parse a string in format of JSON to a arrayList that each elements
      * contains the title, link and displaylink.
-     * 
+     *
      * @param JSONString
      * @return
      */
@@ -74,8 +51,6 @@ public class WikiDroidHttpClient {
         try {
             JSONObject json = new JSONObject(JSONString);
 
-            // System.out.println("KEYS : " + json.keySet());
-            // System.out.println("ITEMS : \n" + json.get("items"));
             /*
              * get the element items, this element have the title, link and
              * displaylink
@@ -112,20 +87,16 @@ public class WikiDroidHttpClient {
         // example
         // https://www.googleapis.com/customsearch/v1?q=brasil&cref=*.wikipedia.org&cx=015353232511339500776%3Appncxs5ywr4&key=AIzaSyAaRUVbkeSktuHiFFru6lMlC7SbS7ju5gA
         String query = "";
-        // query = "https://www.googleapis.com/customsearch/v1?"
-        // + "key=" + API_KEY + "&cx=" + SEARCH_ENGINE_ID + "&q=" + content
-        // + "&cref=*.wikipedia.org/*"
-        // + "&fields=" + QUERY_FIELDS;
         Uri q = new Uri.Builder()
-        .scheme("https")
-        .authority("www.googleapis.com")
-        .path("/customsearch/v1")
-        .appendQueryParameter("key", API_KEY)
-        .appendQueryParameter("cx", SEARCH_ENGINE_ID)
-        .appendQueryParameter("q", content)
-        .appendQueryParameter("cref", "*.wikipedia.org/*")
-        .appendQueryParameter("fields", QUERY_FIELDS)
-        .build();
+                .scheme("https")
+                .authority("www.googleapis.com")
+                .path("/customsearch/v1")
+                .appendQueryParameter("key", API_KEY)
+                .appendQueryParameter("cx", SEARCH_ENGINE_ID)
+                .appendQueryParameter("q", content)
+                .appendQueryParameter("cref", "*.wikipedia.org/*")
+                .appendQueryParameter("fields", QUERY_FIELDS)
+                .build();
         query = q.toString();
         Log.i("search", "Custom request: \n" + query);
         for (int i = 0; i < 2; i++) {
@@ -153,10 +124,7 @@ public class WikiDroidHttpClient {
 
     // HTTP GET request
     public String sendGet(String URL) throws IllegalArgumentException, IOException, ClientProtocolException {
-        // CloseableHttpClient client = HttpClients.createDefault();
         HttpGet request = new HttpGet(URL);
-        // add request header
-        // request.addHeader("User-Agent", USER_AGENT);
 
         HttpResponse response = mHttpClient.execute(request);
 
@@ -172,47 +140,9 @@ public class WikiDroidHttpClient {
         while ((line = rd.readLine()) != null) {
             result.append(line);
         }
-        // String res = result.toString().split("\n")[1];
-        // System.out.println("\n"+result.toString());
 
         return result.toString();
     }
-
-    // HTTP POST request
-    // private void sendPost() throws Exception {
-    // String url = "https://selfsolve.apple.com/wcResults.do";
-    //
-    // HttpPost post = new HttpPost(url);
-    //
-    // // add header
-    // post.setHeader("User-Agent", USER_AGENT);
-    //
-    // List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-    // urlParameters.add(new BasicNameValuePair("sn", "C02G8416DRJM"));
-    // urlParameters.add(new BasicNameValuePair("cn", ""));
-    // urlParameters.add(new BasicNameValuePair("locale", ""));
-    // urlParameters.add(new BasicNameValuePair("caller", ""));
-    // urlParameters.add(new BasicNameValuePair("num", "12345"));
-    //
-    // post.setEntity(new UrlEncodedFormEntity(urlParameters));
-    //
-    // HttpResponse response = mHttpClient.execute(post);
-    // System.out.println("\nSending 'POST' request to URL : " + url);
-    // System.out.println("Post parameters : " + post.getEntity());
-    // System.out.println("Response Code : "
-    // + response.getStatusLine().getStatusCode());
-    //
-    // BufferedReader rd = new BufferedReader(
-    // new InputStreamReader(response.getEntity().getContent()));
-    //
-    // StringBuffer result = new StringBuffer();
-    // String line = "";
-    // while ((line = rd.readLine()) != null) {
-    // result.append(line);
-    // }
-    //
-    // System.out.println(result.toString());
-    // }
 
     public void close() {
         mHttpClient.close();

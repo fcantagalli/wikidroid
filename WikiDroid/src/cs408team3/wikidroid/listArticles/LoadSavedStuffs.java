@@ -84,16 +84,16 @@ public class LoadSavedStuffs extends Activity {
             webView.loadUrl("file:///" + dir.toString());
         }
         else { // This part is for code below KITKAT, i didn't tested it yet.
-            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName + ".xml");
+            File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/" + fileName);
             try {
                 // read the saved file.
                 FileInputStream is = new FileInputStream(dir);
+
                 WebArchiveReader wr = new WebArchiveReader() {
 
                     @Override
                     public void onFinished(WebView v) {
                         // we are notified here when the page is fully loaded.
-
                     }
                 };
 

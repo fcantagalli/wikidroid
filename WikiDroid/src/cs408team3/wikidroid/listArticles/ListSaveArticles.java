@@ -191,27 +191,29 @@ public class ListSaveArticles extends Activity {
             Log.v(TAG, "Title: " + getItem(position));
             Log.v(TAG, "Link: " + (mapLinks.get(getItem(position)) == null ? "null" : mapLinks.get(getItem(position))));
 
+
             if (convertView == null) {
                 view = mInflater.inflate(mResource, parent, false);
+
+                try {
+                    text = (TextView) view.findViewById(mFieldId);
+                    imgView = (ImageView) view.findViewById(mImgFieldId);
+
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "You must supply a resource ID for a TextView");
+                    throw new IllegalStateException(TAG + " requires the resource ID to be a TextView", e);
+                }
+
+                text.setText(Utils.trimWikipediaTitle(getItem(position)));
+                if (mapLinks.get(getItem(position)) != null) {
+                    Log.d(TAG, "Entrou aquiii");
+                    imgView.setVisibility(View.INVISIBLE);
+                }
 
             } else {
                 view = convertView;
             }
 
-            try {
-                text = (TextView) view.findViewById(mFieldId);
-                imgView = (ImageView) view.findViewById(mImgFieldId);
-
-            } catch (ClassCastException e) {
-                Log.e(TAG, "You must supply a resource ID for a TextView");
-                throw new IllegalStateException(TAG + " requires the resource ID to be a TextView", e);
-            }
-
-            text.setText(Utils.trimWikipediaTitle(getItem(position)));
-            if (mapLinks.get(getItem(position)) != null) {
-                Log.d(TAG, "Entrou aquiii");
-                imgView.setVisibility(View.INVISIBLE);
-            }
             return view;
         }
 

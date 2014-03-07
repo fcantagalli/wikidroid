@@ -21,7 +21,7 @@
 * Download and install [Android SDK](https://developer.android.com/sdk/index.html) for your platform
 	* Instructions can be found [here](https://developer.android.com/sdk/installing/index.html)
 
-## (Optional) Emulator Setup
+## (Optional) Emulator setup
 
 1. Launch Android SDK Manager, and install
 	1. Android 4.4.2 (API 19)
@@ -38,7 +38,7 @@
 	9. Click <code>OK</code>
 3. Select <code>avd-test</code> and click <code>Start...</code>
 
-## Project Setup
+## Project setup
 
 1. Launch Android SDK Manager, and install
 	1. Android SDK Tools
@@ -56,3 +56,35 @@
 	5. Click <code>Finish</code>
 3. Connect your Android device or emulator
 4. From menu, select <code>Run > Run</code>
+
+## How to use
+
+* Open an article
+	* Click the search button on the action bar
+	* Type in the article name
+	* Click the search button on the keyboard
+* Open a new tab
+	* Swipe left (or click the "drawer"" icon on the action bar) to open navigation drawer
+	* Click the "plus" icon
+* Switch tabs
+	* Open navigation drawer
+	* Click the tab you want to see
+* Close tab
+	* Open navigation drawer
+	* Click "close" button inside the drawer
+* Switch article languages
+	* Open an article
+	* Click "menu" button (or the physical button on the phone), click "Languages"
+	* Click the desire language
+	* Click "OK"
+* Save article as bookmark
+	* Open an article
+	* Open navigation drawer
+	* Click "star" icon
+* Save article for offline access
+	* Open an article
+	* Open menu
+	* Click "Save Article"
+* Show all saved article and links
+	* Open menu
+	* Click "List of Articles Saved"

@@ -28,7 +28,7 @@ import cs408team3.wikidroid.Utils;
 
 public class ListSaveArticles extends Activity {
 
-    private ListView listView;
+    private ListView          listView;
     private ArrayList<String> listArticles;
     private Map<String, ?>    mapLinks;    // SharedPreferences returns a
                                             // generic type
@@ -55,10 +55,17 @@ public class ListSaveArticles extends Activity {
         for (String s : articles) {
             Log.i("oii", s);
             String[] aux = s.split("[.]");
+            String name = "";
+            for (int i = 0; i < aux.length - 1; i++) {
+                name += aux[i] + ".";
+            }
+
+            name = name.substring(0, name.length() - 1);
+            Log.i("oii", name);
             // Log.i("oii", "" + Arrays.toString(aux));
-            mapLinks.put(aux[0], null); // null to know they are name files and
-                                        // not
-                                   // links
+            mapLinks.put(name, null); // null to know they are name files and
+                                      // not
+            // links
         }
 
         // initialize listArticles
@@ -80,6 +87,7 @@ public class ListSaveArticles extends Activity {
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // TODO Auto-generated method stub
@@ -104,7 +112,6 @@ public class ListSaveArticles extends Activity {
                     intent.putExtra("url", (String) mapLinks.get(filename));
                     startActivity(intent);
                 }
-
 
             }
         });

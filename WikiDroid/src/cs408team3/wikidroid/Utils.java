@@ -54,7 +54,11 @@ public class Utils {
      */
     public static String trimWikipediaTitle(String title) {
         if (title != null) {
-            String[] splittedTitle = title.split(" - ");
+            String splitter = " - ";
+            if (title.contains(" — ")) {
+                splitter = " — ";
+            }
+            String[] splittedTitle = title.split(splitter);
             String nTitle;
 
             if (splittedTitle.length > 0) {

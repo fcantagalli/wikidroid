@@ -28,6 +28,8 @@ import cs408team3.wikidroid.Utils;
 
 public class ListSaveArticles extends Activity {
 
+    private static final String TAG = "ListSaveArticles";
+
     private ListView          listView;
     private ArrayList<String> listArticles;
     private Map<String, ?>    mapLinks;    // SharedPreferences returns a
@@ -140,9 +142,11 @@ public class ListSaveArticles extends Activity {
     }
 
     public Map<String, ?> getSavedLinkList() {
-
+        // FIXME: Will break if we store other shared preferences
         SharedPreferences sharedPref = this.getSharedPreferences(Utils.LINKS, Context.MODE_PRIVATE);
         Map<String, ?> links = sharedPref.getAll();
+
+        Log.v(TAG, "Link Maps: " + links.toString());
 
         return links;
     }
@@ -184,6 +188,9 @@ public class ListSaveArticles extends Activity {
             TextView text;
             ImageView imgView;
 
+            Log.v(TAG, "Title: " + getItem(position));
+            Log.v(TAG, "Link: " + (mapLinks.get(getItem(position)) == null ? "null" : mapLinks.get(getItem(position))));
+
             if (convertView == null) {
                 view = mInflater.inflate(mResource, parent, false);
 
@@ -202,7 +209,7 @@ public class ListSaveArticles extends Activity {
 
             text.setText(Utils.trimWikipediaTitle(getItem(position)));
             if (mapLinks.get(getItem(position)) != null) {
-                Log.d("oii", "Entrou aquiii");
+                Log.d(TAG, "Entrou aquiii");
                 imgView.setVisibility(View.INVISIBLE);
             }
             return view;

@@ -11,9 +11,13 @@
 ## Requirement
 
 * Android 4.0 (API 14)
+* JRE 1.6 _(required by Android SDK)_
 
 ## Prerequisites
 
+* Download and install JRE 1.6
+	* Windows / Linux version can be downloaded [here](http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase6-419409.html#jre-6u45-oth-JPR)
+	* Mac version can be downloaded [here](http://support.apple.com/kb/DL1572)
 * Download and install [Android SDK](https://developer.android.com/sdk/index.html) for your platform
 	* Instructions can be found [here](https://developer.android.com/sdk/installing/index.html)
 

@@ -38,7 +38,17 @@
 	9. Click <code>OK</code>
 3. Select <code>avd-test</code> and click <code>Start...</code>
 
-## Project setup
+## Install APK file
+
+1. Launch Android SDK Manager, and install
+	1. Android SDK Tools
+	2. Android SDK Platform-tools
+2. Add <code>{android sdk directory}/tools</code> and <code>{android sdk directory}/platform-tools</code> to your PATH
+3. Connect your device or emulator
+4. Open terminal and type <code>adb install WikiDroid.apk</code>
+
+
+## Source code setup
 
 1. Launch Android SDK Manager, and install
 	1. Android SDK Tools

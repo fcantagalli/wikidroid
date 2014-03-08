@@ -30,3 +30,5 @@ gen/
 .metadata
 .metadata/
 .metadata/*
+
+proguard/

@@ -53,7 +53,7 @@
 1. Launch Android SDK Manager, and install
 	1. Android SDK Tools
 	2. Android SDK Platform-tools
-	3. Android SDK Build-tools - 19.0.2
+	3. Android SDK Build-tools - 19.0.3
 	4. Android 4.4.2 (API 19)
 		1. (Required) SDK Platform
 		3. (Optional) Google APIs

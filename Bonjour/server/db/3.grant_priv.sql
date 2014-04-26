@@ -1,1 +1,0 @@
-GRANT ALL PRIVILEGES ON bonjour_demo.* TO 'bonjour_demo'@'localhost';

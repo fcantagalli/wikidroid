@@ -2,6 +2,7 @@ package cs408team3.wikidroid.listArticles;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,13 +75,13 @@ public class ListSaveArticles extends Activity {
         listArticles = new ArrayList<String>();
 
         // if there is internet available, show the saved links.
-        if (Utils.isNetworkAvailable(this)) {
+        // if (Utils.isNetworkAvailable(this)) {
             Set<String> keys = mapLinks.keySet();
 
             for (String s : keys) {
                 listArticles.add(s);
             }
-        }
+        // }
 
         // Log.d("oii", "maps: " + mapLinks);
 
@@ -143,12 +144,19 @@ public class ListSaveArticles extends Activity {
 
     public Map<String, ?> getSavedLinkList() {
         // FIXME: Will break if we store other shared preferences
-        SharedPreferences sharedPref = this.getSharedPreferences(Utils.LINKS, Context.MODE_PRIVATE);
-        Map<String, ?> links = sharedPref.getAll();
+        if (Utils.isNetworkAvailable(this)) {
 
-        Log.v(TAG, "Link Maps: " + links.toString());
+            SharedPreferences sharedPref = this.getSharedPreferences(Utils.LINKS, Context.MODE_PRIVATE);
+            Map<String, ?> links = sharedPref.getAll();
 
-        return links;
+            Log.v(TAG, "Link Maps: " + links.toString());
+
+            return links;
+        }
+        else {
+            Map<String, ?> links = new HashMap<String, String>();
+            return links;
+        }
     }
 
     class ListAdapter extends BaseAdapter {

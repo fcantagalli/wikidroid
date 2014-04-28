@@ -132,13 +132,17 @@ public class ListSaveArticles extends Activity {
         File dir = new File(sdCard.getAbsolutePath() + "/WikiDroid/");
 
         File[] filesOnDir = dir.listFiles();
-        Log.i("oii", "length : " + filesOnDir.length);
-        ArrayList<String> fileNames = new ArrayList<String>(filesOnDir.length);
-        for (File f : filesOnDir) {
-            fileNames.add(f.getName());
+        if (filesOnDir != null) {
+            Log.i("oii", "length: " + filesOnDir.length);
+            ArrayList<String> fileNames = new ArrayList<String>(filesOnDir.length);
+            for (File f : filesOnDir) {
+                fileNames.add(f.getName());
+            }
+            Log.i("oii", "" + fileNames);
+            return fileNames;
+        } else {
+            return new ArrayList<String>(0);
         }
-        Log.i("oii", "" + fileNames);
-        return fileNames;
     }
 
     public Map<String, ?> getSavedLinkList() {
